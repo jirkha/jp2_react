@@ -1,9 +1,17 @@
 import React, {useState, useEffect} from 'react'
-import ListMaterial from '../components/ListMaterial'
+import ListMaterial from "../components/Material/ListMaterial";
 //imd(import)
-import * as AddButton from '../components/AddButton'
-import AddItemForm from "../components/AddItemForm";
-import FormContainer from "../components/FormContainer";
+//import "../App.css";
+// import '../style.css'
+import { Container, Button, Row, Col, Form, InputGroup } from "react-bootstrap";
+import * as AddButton from '../components/Material/AddButton'
+import AddItemForm from "../components/Material/AddItemForm";
+import FormContainer from "../components/Material/FormContainer";
+import ItemTable from '../components/Material/ItemTable';
+import {HeaderPage} from "../styles/styles";
+import { IoMdAddCircle } from "react-icons/io";
+import { Typography } from "@mui/material";
+
 
 function ListMaterialPage() {
 
@@ -30,30 +38,50 @@ function ListMaterialPage() {
 
   return (
     <div>
-      <div className="notes">
-        <div className="notes-header">
+      {/* <Row>
+        <Col>
           <h2 className="notes-title">&#9782; Seznam materiálu</h2>
-          {/* <p className='notes-count'>{material.m_ser.length}</p> */}
-        </div>
-        <div className="notes-list">
-          {material.map((m_ser, index) => (
-            <ListMaterial key={index} m_ser={m_ser} />
-          ))}
-        </div>
-        <AddButton.AddButton link="#itemForm" />
-      </div>
+        </Col>
+      </Row>
+      <Row md="auto">
+        {material.map((m_ser, index) => (
+          <Col sm={12} md={6} lg={4} xl={3} key={index}>
+            <ListMaterial m_ser={m_ser} />
+          </Col>
+        ))}
+      </Row> */}
+      {/* <Container> */}
+      {/* <HeaderPage> */}
+      <Typography
+        variant="h4"
+        //color="textPrimary"
+        align="center" //zarovná doprostřed
+        gutterBottom //vytvoří mezeru pod textem
+      >
+        &#9782; Seznam materiálu <AddButton.AddButton link="#itemForm" />
+      </Typography>
+      {/* </HeaderPage> */}
+      <ItemTable />
+      {/* </Container> */}
+      {/* </Container> */}
+      {/*</div> */}
       <section id="itemForm">
-        <div className="notes">
-          <div className="notes-header">
-            <FormContainer>
-              <h2 className="notes-title">&#9782; Přidat materiál</h2>
-              
-               <div className="notes-list">
-                <AddItemForm />
-                </div>
-            </FormContainer>
-          </div>
-        </div>
+        {/* <div className="notes"> */}
+        <Container>
+          <FormContainer>
+            <Typography
+              variant="h4"
+              //color="textPrimary"
+              align="center" //zarovná doprostřed
+              gutterBottom //vytvoří mezeru pod textem
+            >
+              &#9782; Přidat materiál
+            </Typography>
+            <div className="notes-list">
+              <AddItemForm />
+            </div>
+          </FormContainer>
+        </Container>
       </section>
     </div>
   );

@@ -1,185 +1,231 @@
-import React, {useState, useEffect} from 'react'
-import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import Axios from 'axios'
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import {
+  useTable,
+  useSortBy,
+  useGlobalFilter,
+  useFilters,
+  usePagination,
+  useRowSelect,
+} from "react-table";
+import { ITEM_COLUMNS } from "../components/Material/ItemColumns";
+import { GlobalFilter } from "../components/Material/GlobalFilter";
+import { ColumnFilter } from "../components/Material/ColumnFilter";
+import {
+  BsFillArrowUpSquareFill,
+  BsFillArrowDownSquareFill,
+  BsSortDown,
+} from "react-icons/bs";
+import Axios from "axios";
+import { useBlockLayout } from "react-table";
+import { useSticky } from "react-table-sticky";
+import { Styles } from "../components/Material/TableStyles";
+import "../components/Material/table.css";
+import { CheckboxTable } from "../components/Global/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+//import Checkbox from "@mui/material/Checkbox";
 
-const ProductReviewForm = () => {
-  
-  const [itemType, setItemType] = useState([]);
 
-    useEffect(() => {
-      Axios.get('/api/item_types/')
-      .then(res => {
-        console.log("MaterialTypes: ", res.data)
-        setItemType(res.data)      
-      }).catch(err => console.log(err))
-    }, [])
+//import { Button } from "../../styles/styles.js";
 
-  const validationSchema = Yup.object({
-    itemType: Yup.string().required("Please select a product"),//.oneOf(itemType),
-    name: Yup.string().required(),
-    email: Yup.string().email().required(),
-    title: Yup.string().required(),
-    review: Yup.string().required(),
-    costs: Yup.number().min(1).max(10).required(),
-    date: Yup.date().default(() => new Date()),
-    wouldRecommend: Yup.boolean().default(false),
-  });
 
-  const initialValues = {
-    name: "",
-    email: "",
-    title: "",
-    review: "",
-    costs: "",
-    date: new Date(),
-    wouldRecommend: false,
-    itemType: "",
+function ItemTable() {
+  const [material, setMaterial] = useState([]);
+  useEffect(() => {
+    Axios.get("/api/list_items/").then((res) => {
+      setMaterial(res.data);
+      console.log("tabulka s daty: ", res.data);
+    });
+  }, []);
+
+  const postDelete = (id, e) => {
+    e.preventDefault();
+    Axios.delete(`/api/item_delete/${id}`)
+      .then((res) => console.log("Deleted!", res))
+      .catch((err) => console.log(err));
   };
 
-    const onSubmit = (values)  => {
-      values.preventDefault();
-      Axios.post('/api/item_add/', {
-        // name,
-        // itemType,
-        // costs,
-        // supplier,
-        // link,
-        // note
-      }).then(res => {
-        console.log("Adding Item: : ", res)
-        console.log("type: ",res.data.type)
-    }).catch(err => console.log(err))
-  }
+  const columns = useMemo(() => ITEM_COLUMNS, []);
+  const data = useMemo(() => material);
 
-  //declaration of products
-  //declaration of validationSchema
-  //declaration of initialValues
-  //declaration of onSubmit callback
+  const defaultColumn = React.useMemo(
+    () => ({
+      Filter: ColumnFilter,
+    }),
+    []
+  );
 
-  const productOptions = itemType.map((opt, index) => (<option key={index} value={opt.id}>
- {opt.name}
- </option>
-));
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    //footerGroups,
+    page,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
+    pageOptions,
+    prepareRow,
+    setPageSize,
+    state,
+    setGlobalFilter,
+    selectedFlatRows,
+    allColumns,
+    getToggleHideAllColumnsProps,
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn,
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: "selection",
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <CheckboxTable {...getToggleAllRowsSelectedProps()} />
+          ),
+          Cell: ({ row }) => (
+            <CheckboxTable {...row.getToggleRowSelectedProps()} />
+          ),
+        },
+        ...columns,
+      ]);
+    }
+  );
 
-  const renderError = (message) => <p className="help is-danger">{message}</p>;
+  const { globalFilter, pageIndex, pageSize } = state;
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={async (values, { resetForm }) => {
-        await onSubmit(values);
-        resetForm();
-      }}
-    >
-      <Form>
-        <div
-          className="container"
-          style={{
-            width: "60%",
-          }}
-        >
-          <div className="field">
-            <label className="label" htmlFor="name">
-              Full name
-            </label>
-            <div className="control">
-              <Field
-                name="name"
-                type="text"
-                className="input"
-                placeholder="Full name"
-              />
-              <ErrorMessage name="name" render={renderError} />
-            </div>
-          </div>
-          <div className="field">
-            <label className="label" htmlFor="email">
-              Email address
-            </label>
-            <div className="control">
-              <Field
-                name="email"
-                type="text"
-                className="input"
-                placeholder="Email address"
-              />
-              <ErrorMessage name="email" render={renderError} />
-            </div>
-          </div>
-          <div className="field">
-            <label className="label" htmlFor="itemType">
-              Product
-            </label>
-            <div className="control">
-              <Field name="itemType" as="select" className="select is-fullwidth">
-                <option value={""}>Select a product</option>
-                {productOptions}
-              </Field>
-              <ErrorMessage name="itemType" render={renderError} />
-            </div>
-          </div>
-          <div className="field">
-            <label className="label" htmlFor="title">
-              Title
-            </label>
-            <div className="control">
-              <Field
-                name="title"
-                type="text"
-                className="input"
-                placeholder="Title"
-              />
-              <ErrorMessage name="title" render={renderError} />
-            </div>
-          </div>
-          <div className="field">
-            <label className="label" htmlFor="review">
-              Review
-            </label>
-            <div className="control">
-              <Field
-                name="review"
-                as="textarea"
-                className="textarea"
-                placeholder="Review"
-              />
-              <ErrorMessage name="review" render={renderError} />
-            </div>
-          </div>
-          <div className="field">
-            <label className="label" htmlFor="costs">
-              Rating
-            </label>
-            <div className="control">
-              <Field
-                name="costs"
-                type="number"
-                className="input"
-                placeholder="Costs"
-              />
-              <ErrorMessage name="costs" render={renderError} />
-            </div>
-          </div>
-          <div className="field">
-            <div className="control">
-              <label className="checkbox label" htmlFor="wouldRecommend">
-                <Field
-                  name="wouldRecommend"
-                  type="checkbox"
-                  className="checkbox"
-                />
-                Would recommend
-              </label>
-            </div>
-          </div>
-          <button type="submit" className="button is-primary">
-            Submit
-          </button>
+    <>
+      <div>
+        {/* <FormGroup>
+          <FormControlLabel
+            control={<Checkbox defaultChecked />}
+            label="Label"
+          />
+          <FormControlLabel disabled control={<Checkbox />} label="Disabled" />
+        </FormGroup> */}
+        <div>
+          <CheckboxTable {...getToggleHideAllColumnsProps()} /> Zobraz vše
         </div>
-      </Form>
-    </Formik>
+        {allColumns.map((column) => (
+          <div key={column.id}>
+            <label>
+              <input type="checkbox" {...column.getToggleHiddenProps()} />{" "}
+              {column.Header}
+            </label>
+          </div>
+        ))}
+        <br />
+      </div>
+      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render("Header")}
+                  <span>
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <BsFillArrowDownSquareFill />
+                      ) : (
+                        <BsFillArrowUpSquareFill />
+                      )
+                    ) : (
+                      <BsSortDown />
+                    )}
+                  </span>
+
+                  <div>{column.canFilter ? column.render("Filter") : null}</div>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+        {/* tfoot slouží k zobrazení legendy tabulky po tabulkou - je deaktivováno */}
+        {/* <tfoot>
+        {footerGroups.map((footerGroop) => (
+          <tr {...footerGroop.getFooterGroupProps()}>
+            {footerGroop.headers.map((column) => (
+              <td {...column.getFooterProps}>{column.render("Footer")}</td>
+            ))}
+          </tr>
+        ))}
+      </tfoot> */}
+      </table>
+      <div>
+        <span>
+          Strana{" "}
+          <strong>
+            {pageIndex + 1} z {pageOptions.length}
+          </strong>
+        </span>
+        <select
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+        >
+          {[10, 20, 30, 50, 100].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Stran {pageSize}
+            </option>
+          ))}
+        </select>
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {" "}
+          -1{" "}
+        </button>
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {" "}
+          +1{" "}
+        </button>
+      </div>
+      {/* <Button type="delete" onClick={(e) => postDelete(material?.m_ser.id, e)}> */}
+      <button
+        type="delete"
+        color={"red"}
+        disabled={selectedFlatRows.length < 1}
+        onClick={(e) =>
+          selectedFlatRows.map((row) => postDelete(row.original.id, e))
+        }
+      >
+        Vymazat
+      </button>
+      {/* <pre>
+        <code>
+          {JSON.stringify(
+            {
+              selectedFlatRows: selectedFlatRows.map((row) => row.original),
+            },
+            null,
+            2
+          )}
+        </code>
+      </pre> */}
+    </>
   );
-};
-export default ProductReviewForm;
+}
+
+export default ItemTable;
