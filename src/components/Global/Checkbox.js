@@ -1,4 +1,5 @@
 import React from "react";
+import Checkbox from "@mui/material/Checkbox";
 
 export const CheckboxTable = React.forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = React.useRef();
@@ -10,7 +11,7 @@ export const CheckboxTable = React.forwardRef(({ indeterminate, ...rest }, ref) 
 
   return (
     <>
-      <input type="checkbox" ref={resolvedRef} {...rest} />
+      <Checkbox ref={resolvedRef} {...rest} />
     </>
   );
 });

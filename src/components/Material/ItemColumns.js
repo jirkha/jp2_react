@@ -19,8 +19,8 @@ export const ITEM_COLUMNS = [
     ),
   },
   {
-    Header: "Typ materiálu ",
-    Footer: "Typ materiálu",
+    Header: "Typ ",
+    Footer: "Typ",
     accessor: "type.name",
   },
   {

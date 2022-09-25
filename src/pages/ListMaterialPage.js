@@ -9,8 +9,7 @@ import AddItemForm from "../components/Material/AddItemForm";
 import FormContainer from "../components/Material/FormContainer";
 import ItemTable from '../components/Material/ItemTable';
 import {HeaderPage} from "../styles/styles";
-import { IoMdAddCircle } from "react-icons/io";
-import { Typography } from "@mui/material";
+import { Typography, Stack } from "@mui/material";
 
 
 function ListMaterialPage() {
@@ -50,39 +49,48 @@ function ListMaterialPage() {
           </Col>
         ))}
       </Row> */}
-      {/* <Container> */}
-      {/* <HeaderPage> */}
-      <Typography
-        variant="h4"
-        //color="textPrimary"
-        align="center" //zarovná doprostřed
-        gutterBottom //vytvoří mezeru pod textem
-      >
-        &#9782; Seznam materiálu <AddButton.AddButton link="#itemForm" />
-      </Typography>
-      {/* </HeaderPage> */}
-      <ItemTable />
-      {/* </Container> */}
-      {/* </Container> */}
+      <Container>
+        {/* <HeaderPage> */}
+        <Typography
+          variant="h2"
+          color="primary"
+          align="center" //zarovná doprostřed
+          gutterBottom //vytvoří mezeru pod textem
+        >
+          &#9782; Seznam materiálu <AddButton.AddButton link="#itemForm" />
+        </Typography>
+        {/* </HeaderPage> */}
+        <ItemTable />
+        {/* </Container> */}
+      </Container>
       {/*</div> */}
-      <section id="itemForm">
-        {/* <div className="notes"> */}
-        <Container>
-          <FormContainer>
-            <Typography
-              variant="h4"
-              //color="textPrimary"
-              align="center" //zarovná doprostřed
-              gutterBottom //vytvoří mezeru pod textem
-            >
-              &#9782; Přidat materiál
-            </Typography>
-            <div className="notes-list">
-              <AddItemForm />
-            </div>
-          </FormContainer>
-        </Container>
-      </section>
+
+      {/* <section id="itemForm"> */}
+      <br />
+      <br />
+      <br />
+
+      {/* <div className="notes"> */}
+      <Container component="section" id="itemForm">
+        {/*<FormContainer> */}
+        <Typography
+          variant="h2"
+          color="primary"
+          align="center" //zarovná doprostřed
+          gutterBottom //vytvoří mezeru pod textem
+        >
+          &#9782; Přidat materiál
+        </Typography>
+        <Stack
+          sx={{ justifyContent: "center" }}
+          direction="row"
+        >
+          <AddItemForm />
+        </Stack>
+
+        {/* </FormContainer>*/}
+      </Container>
+      {/* </section> */}
     </div>
   );
 }

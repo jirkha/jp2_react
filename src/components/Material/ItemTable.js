@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTable, useSortBy, useGlobalFilter, useFilters, usePagination, useRowSelect } from "react-table";
+import { useNavigate } from "react-router-dom";
 import { ITEM_COLUMNS } from "./ItemColumns";
 import { GlobalFilter } from './GlobalFilter';
 import { ColumnFilter } from "./ColumnFilter";
@@ -9,14 +10,33 @@ import {
   BsSortDown,
 } from "react-icons/bs";
 import Axios from "axios";
-import './table.css';
 import { CheckboxTable } from "../Global/Checkbox";
 
-import Container from "@mui/material/Container";
-import Stack from '@mui/material/Stack';
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+
+import {
+  Container,
+  Box,
+  Stack,
+  Divider,
+  Button,
+  ButtonGroup,
+  FormGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  tableCellClasses,
+  styled,
+  Grid,
+} from "@mui/material";
+import { CenterFocusStrong } from "@mui/icons-material";
 
 
 function ItemTable() {
@@ -31,11 +51,16 @@ useEffect(() => {
   
 }, []);
 
+  const navigate = useNavigate();
+
     const postDelete = (id, e) => {
       e.preventDefault();
       Axios.delete(`/api/item_delete/${id}`)
-      .then(res => console.log("Deleted!", res)
-    ).catch(err => console.log(err))
+      .then(res => {
+        console.log("Deleted!", res);
+        //setMaterial();
+        navigate("/material");
+      }).catch(err => console.log(err))
     };
 
     const columns = useMemo(() => ITEM_COLUMNS, []);
@@ -82,10 +107,16 @@ useEffect(() => {
           {
             id: "selection",
             Header: ({ getToggleAllRowsSelectedProps }) => (
-              <CheckboxTable {...getToggleAllRowsSelectedProps()} />
+              <CheckboxTable
+                size="small"
+                {...getToggleAllRowsSelectedProps()}
+              />
             ),
             Cell: ({ row }) => (
-              <CheckboxTable {...row.getToggleRowSelectedProps()} />
+              <CheckboxTable
+                size="small"
+                {...row.getToggleRowSelectedProps()}
+              />
             ),
           },
           ...columns,
@@ -95,64 +126,161 @@ useEffect(() => {
 
     const { globalFilter, pageIndex, pageSize } = state;
 
+    const StyledTableCell = styled(TableCell)(({ theme }) => ({
+      [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+        padding: 6,
+
+      },
+      [`&.${tableCellClasses.body}`]: {
+        fontSize: 13,
+      },
+    }));
+
+    const StyledTableRow = styled(TableRow)(({ theme }) => ({
+      "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.action.hover,
+      },
+      // hide last border
+      "&:last-child td, &:last-child th": {
+        border: 0,
+      },
+    }));
+
   return (
     <>
-      <div>
-        <div>
-          <CheckboxTable {...getToggleHideAllColumnsProps()} /> Zobraz vše
-        </div>
-        {allColumns.map((column) => (
-          <div key={column.id}>
-            <label>
-              <input type="checkbox" {...column.getToggleHiddenProps()} />{" "}
-              {column.Header}
-            </label>
-          </div>
-        ))}
-        <br />
-      </div>
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render("Header")}
-                  <span>
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <BsFillArrowDownSquareFill />
-                      ) : (
-                        <BsFillArrowUpSquareFill />
-                      )
-                    ) : (
-                      <BsSortDown />
-                    )}
-                  </span>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid
+          container
+          sx={
+            {
+              //border: "1px solid",
+              //backgroundColor: "primary.light",
+            }
+          }
+        >
+          <Grid
+            container
+            //spacing={{ xs: 0, md: 0 }}
+            // sx={{
+            //   border: "1px solid",
+            //   backgroundColor: "primary.light"
+            // }}
+          >
+            <Grid
+              container
+              item
+              xs={6}
+              justifyContent={"start"}
+              alignContent={"center"}
+            >
+              <FormLabel>Vyberte sloupce k zobrazení</FormLabel>
+            </Grid>
+            <Grid
+              container
+              item
+              xs={6}
+              justifyContent={"end"}
+              alignContent={"center"}
+            >
+              <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item xs={6}>
+              <FormControlLabel
+                label=<strong>{"Zobraz vše"}</strong>
+                control={
+                  <CheckboxTable
+                    size="small"
+                    {...getToggleHideAllColumnsProps()}
+                  />
+                }
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            // spacing={{ xs: 1, md: 2 }}
+          >
+            {allColumns.map((column) => (
+              <Grid item xs={6} sm={3} md={2} key={column.id}>
+                {/* <div key={column.id}> */}
+                <FormControlLabel
+                  // value="bottom"
+                  // labelPlacement="bottom"
+                  label={column.Header}
+                  control={
+                    <CheckboxTable
+                      size="small"
+                      {...column.getToggleHiddenProps()}
+                    />
+                  }
+                  //label="bottom"
+                />
+                {/* </div> */}
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      </Box>
 
-                  <div>{column.canFilter ? column.render("Filter") : null}</div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-        {/* tfoot slouží k zobrazení legendy tabulky po tabulkou - je deaktivováno */}
-        {/* <tfoot>
+      <TableContainer component={Paper} sx={{ maxHeight: "700px" }}>
+        <Table
+          {...getTableProps()}
+          //aria-label="customized table"
+          size="small"
+          stickyHeader
+        >
+          <TableHead>
+            {headerGroups.map((headerGroup) => (
+              <TableRow {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <TableCell
+                    sx={{
+                      backgroundColor: "primary.main",
+                    }}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                  >
+                    {column.render("Header")} {/* název sloupce */}
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <BsFillArrowDownSquareFill />
+                        ) : (
+                          <BsFillArrowUpSquareFill />
+                        )
+                      ) : (
+                        <BsSortDown />
+                      )}
+                    </span>
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableHead>
+          <TableBody {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <StyledTableRow {...row.getRowProps()} hover>
+                  {row.cells.map((cell) => {
+                    return (
+                      <StyledTableCell {...cell.getCellProps()}>
+                        {cell.render("Cell")}
+                      </StyledTableCell>
+                    );
+                  })}
+                </StyledTableRow>
+              );
+            })}
+          </TableBody>
+          {/* tfoot slouží k zobrazení legendy tabulky po tabulkou - je deaktivováno */}
+          {/* <tfoot>
         {footerGroups.map((footerGroop) => (
           <tr {...footerGroop.getFooterGroupProps()}>
             {footerGroop.headers.map((column) => (
@@ -161,7 +289,8 @@ useEffect(() => {
           </tr>
         ))}
       </tfoot> */}
-      </table>
+        </Table>
+      </TableContainer>
 
       <Stack
         direction="row"
@@ -175,12 +304,11 @@ useEffect(() => {
           aria-label="outlined primary button group"
         >
           <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {" "}
-            -{" "}
+            {" << "}
           </Button>
           <Button onClick={() => nextPage()} disabled={!canNextPage}>
             {" "}
-            +{" "}
+            >>{" "}
           </Button>
         </ButtonGroup>
         <div>
@@ -209,7 +337,10 @@ useEffect(() => {
           startIcon={<DeleteOutlinedIcon />}
           disabled={selectedFlatRows.length < 1}
           onClick={(e) =>
-            selectedFlatRows.map((row) => postDelete(row.original.id, e))
+            selectedFlatRows.map(
+              (row) => postDelete(row.original.id, e),
+              navigate("/")
+            )
           }
         >
           Vymazat materiál

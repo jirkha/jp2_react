@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap'
+import { Stack, Typography, Box } from "@mui/material";
 import logo from '../assets/J-P web special_black.png';
 
 const Footer = () => {
 
     return (
-      <footer>
-        <Container>
+      <>
+        {/* <Container>
           <Row className="text-center py-3">
             <Col>
               <hr />
@@ -17,8 +18,29 @@ const Footer = () => {
               </Col>
             </Col>
           </Row>
-        </Container>
-      </footer>
+        </Container> */}
+        <hr />
+        <Stack
+          component="footer"
+          direction="row"
+          sx={{ justifyContent: "space-evenly" }}
+        >
+          <Typography variant="h5" color="primary">
+            J&P CANDLES
+          </Typography>
+          <Box
+            component="img"
+            src={logo}
+            sx={{ width: "180px", height: "45px" }}
+            width="50"
+            height="25"
+            alt="Logo"
+          />
+          <Typography variant="h5" color="primary">
+            © Jiří Vecko
+          </Typography>
+        </Stack>
+      </>
     );
 
 }

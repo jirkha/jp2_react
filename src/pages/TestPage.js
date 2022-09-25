@@ -1,52 +1,398 @@
-import * as React from "react";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import SvgIcon from "@mui/material/SvgIcon";
-//import ProTip from "./ProTip";
+import React from 'react'
+import { Box, Stack, Divider, Grid } from "@mui/material";
+import { CheckboxTable } from "C://Users/vecko/jp_2.0/jp2_react/src/components/Global/Checkbox";
 
-function LightBulbIcon(props) {
+export  const TestPage = () => {
   return (
-    <SvgIcon {...props}>
-      <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z" />
-    </SvgIcon>
-  );
-}
+    <>
+      {/* Stack se používá pro jednorozměrné rozložení */}
+      <Stack
+        sx={{ justifyContent: "center", border: "1px solid" }}
+        direction="row"
+        spacing={2}
+        divider={<Divider orientation="vertical" flexItem />}
+      >
+        <Box
+          component="div"
+          sx={{
+            bgcolor: "primary.main",
+            color: "black", // barva ohraničení
+            height: "50px", // výška
+            width: "50px", // šířka
+            p: "60px", // (padding) odsazení od obsahu umístěného uvnitř
+            //pl: 20,
+            flexWrap: "wrap", // zalomí položky, pokud by přetékaly okraj
+            border: 10, // ohraničení
+            justifyContent: "center", // vzájemné rozmístění položek uvnitř
+            borderRadius: "160px", //zaoblení
+            display: "inline-flex", // umístění obsahu
+            flexDirection: "row", // forma umístění obsahu
+            mb: 0, // (margin) mezera pod boxem
+            m: 0, // mezera (obtékání) ze všech stran
+            textAlign: "center", //zarovnání textu
+            fontSize: 10, // velikost textu
+            fontWeight: "bold", //tloušťka písma
+            letterSpacing: "3px", // mezery mezi písmeny
+          }}
+        >
+          <Box
+            sx={{
+              component: "div",
+              bgcolor: "secondary.main",
+              display: "inline-flex", // umístění obsahu
+              // inline = vedle sebe
+              // block = pod sebe
+              flexDirection: "row",
+              color: "white",
+              // width: "26%",
+              // height: "26%",
+              border: 10,
+            }}
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
 
-function ProTip() {
-  return (
-    <Typography sx={{ mt: 6, mb: 3 }} color="text.secondary">
-      <LightBulbIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-      Pro tip: See more <Link href="https://mui.com/getting-started/templates/">templates</Link> on
-      the MUI documentation.
-    </Typography>
-  );
-}
+          {/* <Box
+          sx={{
+            component: "div",
+            bgcolor: "succes.main",
+            display: "inline-flex",
+            width: "76%",
+            height: "76%",
+            //flexDirection: "column",
+            color: "green",
+            border: 10,
+            overflow: "auto",
+          }}
+        >
+          <CheckboxTable />
+          <CheckboxTable />
+          <CheckboxTable />
+        </Box> */}
+          {/* <Box
+          sx={{
+            component: "div",
+            bgcolor: "succes.main",
+            display: "inline-flex",
+            color: "green",
+            width: "26%",
+            height: "26%",
+            border: 10,
+            overflow: "auto",
+          }}
+        >
+          <CheckboxTable />
+          <CheckboxTable />
+          <CheckboxTable />
+        </Box>
+        <Box
+          sx={{
+            component: "div",
+            bgcolor: "succes.main",
+            flexDirection: "column",
+            display: "inline-flex",
+            width: "26%",
+            height: "26%",
+            color: "green",
+            border: 10,
+            overflow: "scroll",
+          }}
+        >
+          <CheckboxTable />
+          <CheckboxTable />
+          <CheckboxTable />
+        </Box> */}
+        </Box>
+        <Box
+          component="div"
+          sx={{
+            bgcolor: "primary.main",
+            color: "black", // barva ohraničení
+            height: "50px", // výška
+            width: "50px", // šířka
+            p: "60px", // (padding) odsazení od obsahu umístěného uvnitř
+            //pl: 20,
+            flexWrap: "wrap", // zalomí položky, pokud by přetékaly okraj
+            border: 10, // ohraničení
+            justifyContent: "space-evenly", // vzájemné rozmístění položek uvnitř
+            borderRadius: "160px", //zaoblení
+            display: "inline-flex",
+            flexDirection: "row",
+            mb: 10, // (margin) mezera pod boxem
+            m: 10, // mezera (obtékání) ze všech stran
+            textAlign: "center", //zarovnání textu
+            fontSize: 10, // velikost textu
+            fontWeight: "bold", //tloušťka písma
+            letterSpacing: "3px", // mezery mezi písmeny
+          }}
+        >
+          <Box
+            sx={{
+              component: "div",
+              bgcolor: "secondary.main",
+              display: "inline-flex", // umístění obsahu
+              // inline = vedle sebe
+              // block = pod sebe
+              flexDirection: "row",
+              color: "white",
+              // width: "26%",
+              // height: "26%",
+              border: 10,
+            }}
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
+        </Box>
+        <Box
+          component="div"
+          sx={{
+            bgcolor: "primary.main",
+            color: "black", // barva ohraničení
+            height: "50px", // výška
+            width: "50px", // šířka
+            p: "60px", // (padding) odsazení od obsahu umístěného uvnitř
+            //pl: 20,
+            flexWrap: "wrap", // zalomí položky, pokud by přetékaly okraj
+            border: 10, // ohraničení
+            justifyContent: "space-evenly", // vzájemné rozmístění položek uvnitř
+            borderRadius: "160px", //zaoblení
+            display: "inline-flex",
+            flexDirection: "row",
+            mb: 10, // (margin) mezera pod boxem
+            m: 10, // mezera (obtékání) ze všech stran
+            textAlign: "center", //zarovnání textu
+            fontSize: 10, // velikost textu
+            fontWeight: "bold", //tloušťka písma
+            letterSpacing: "3px", // mezery mezi písmeny
+          }}
+        >
+          <Box
+            sx={{
+              component: "div",
+              bgcolor: "secondary.main",
+              display: "inline-flex", // umístění obsahu
+              // inline = vedle sebe
+              // block = pod sebe
+              flexDirection: "row",
+              color: "white",
+              // width: "26%",
+              // height: "26%",
+              border: 10,
+            }}
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
+        </Box>
+        <Box
+          component="div"
+          sx={{
+            bgcolor: "primary.main",
+            color: "black", // barva ohraničení
+            height: "50px", // výška
+            width: "50px", // šířka
+            p: "60px", // (padding) odsazení od obsahu umístěného uvnitř
+            //pl: 20,
+            flexWrap: "wrap", // zalomí položky, pokud by přetékaly okraj
+            border: 10, // ohraničení
+            justifyContent: "space-evenly", // vzájemné rozmístění položek uvnitř
+            borderRadius: "160px", //zaoblení
+            display: "inline-flex",
+            flexDirection: "row",
+            mb: 10, // (margin) mezera pod boxem
+            m: 10, // mezera (obtékání) ze všech stran
+            textAlign: "center", //zarovnání textu
+            fontSize: 10, // velikost textu
+            fontWeight: "bold", //tloušťka písma
+            letterSpacing: "3px", // mezery mezi písmeny
+          }}
+        >
+          <Box
+            sx={{
+              component: "div",
+              bgcolor: "secondary.main",
+              display: "inline-flex", // umístění obsahu
+              // inline = vedle sebe
+              // block = pod sebe
+              flexDirection: "row",
+              color: "white",
+              // width: "26%",
+              // height: "26%",
+              border: 10,
+            }}
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
+        </Box>
+      
+      </Stack>
+      {/* Grid se používá pro vícerozměné rozvržení položek
+      xs = mobilní obrazovka
+      sm = tablet
+      md = PC
+      lg = větší monitor
+      xl = větší monitor */}
+      <Grid
+        container
+        alignContent={"center"}
+        xs={12}
+        spacing={0}
+        // sx={{
+        //   border: "1px solid",
+        //   //width: "100%",
+        //   display: "flex",
+        //   // direction:"row",
+        //   // justifyContent: "space-between",
+        //   // alignItems:"center"
+        // }}
+        //direction="column"
+        // justifyContent="center"
+        // alignItems="center"
+      >
+        <Grid
+          container
+          item
+          xs={12}
+          md={3} //sx={{ margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems:"center"}}
+          // direction="row"
+          // justifyContent="space-between"
+          // alignItems="center"
+          justifyContent={"start"}
+        >
+          <Box
+            sx={
+              {
+                // component: "div",
+                // bgcolor: "secondary.main",
+                // display: "block", // umístění obsahu
+                // // inline = vedle sebe
+                // // block = pod sebe
+                // flexDirection: "row",
+                // color: "white",
+                // // width: "26%",
+                // // height: "26%",
+                // // border: 10,
+              }
+            }
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
+        </Grid>
+        <Grid
+          container
+          item
+          xs={4}
+          md={3}
+          sx={{ margin: "0 auto" }}
+          justifyContent={"start"}
+        >
+          <Box
+            sx={{
+              component: "div",
+              bgcolor: "secondary.main",
+              // display: "inline-flex", // umístění obsahu
+              // inline = vedle sebe
+              // block = pod sebe
+              // flexDirection: "row",
+              color: "white",
+              // width: "26%",
+              // height: "26%",
+              // border: 10,
+            }}
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
+        </Grid>
+        <Grid
+          container
+          item
+          xs={4}
+          md={3}
+          sx={{ margin: "0 auto" }}
+          justifyContent={"center"}
+        >
+          <Box
+            sx={{
+              component: "div",
+              bgcolor: "secondary.main",
+              // display: "inline-flex", // umístění obsahu
+              // inline = vedle sebe
+              // block = pod sebe
+              // flexDirection: "row",
+              color: "white",
+              // width: "26%",
+              // height: "26%",
+              // border: 10,
+            }}
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
+        </Grid>
+        <Grid
+          container
+          item
+          xs={4}
+          md={3}
+          sx={{ margin: "0 auto" }}
+          justifyContent={"center"}
+        >
+          <Box
+            sx={{
+              component: "div",
+              bgcolor: "secondary.main",
+              // display: "inline-flex", // umístění obsahu
+              // inline = vedle sebe
+              // block = pod sebe
+              // flexDirection: "row",
+              color: "white",
+              // width: "26%",
+              // height: "26%",
+              // border: 10,
+            }}
+          >
+            <CheckboxTable />
+            <CheckboxTable />
+            <CheckboxTable />
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid container alignContent={"center"} xs={12}>
+        <Grid container item xs={6} justifyContent={"start"}>
+          <span> content one </span>
+        </Grid>
+        <Grid container item xs={6} justifyContent={"center"}>
+          <span> content two </span>
+        </Grid>
+      </Grid>
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+      {/* <Box sx={{ flexGrow: 1 }}> */}
+        <Grid
+          container
+          spacing={{ xs: 1, md: 2 }}
+          columns={{ xs: 4, sm: 12, md: 12 }}
+        >
+          {Array.from(Array(10)).map((_, index) => (
+            <Grid item xs={2} sm={3} md={2} key={index}>
+              <CheckboxTable />
+            </Grid>
+          ))}
+        </Grid>
+      {/* </Box> */}
+    </>
+  );}
 
-export default function App() {
-  return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Create React App example
-        </Typography>
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
-  );
-}
+// NASTUDOVAT ZDE
+// https://mui.com/system/properties/

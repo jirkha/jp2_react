@@ -1,231 +1,219 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  useTable,
-  useSortBy,
-  useGlobalFilter,
-  useFilters,
-  usePagination,
-  useRowSelect,
-} from "react-table";
-import { ITEM_COLUMNS } from "../components/Material/ItemColumns";
-import { GlobalFilter } from "../components/Material/GlobalFilter";
-import { ColumnFilter } from "../components/Material/ColumnFilter";
-import {
-  BsFillArrowUpSquareFill,
-  BsFillArrowDownSquareFill,
-  BsSortDown,
-} from "react-icons/bs";
-import Axios from "axios";
-import { useBlockLayout } from "react-table";
-import { useSticky } from "react-table-sticky";
-import { Styles } from "../components/Material/TableStyles";
-import "../components/Material/table.css";
-import { CheckboxTable } from "../components/Global/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-//import Checkbox from "@mui/material/Checkbox";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Input from "@mui/material/Input";
+import FilledInput from "@mui/material/FilledInput";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+export default function InputAdornments() {
+  const [values, setValues] = React.useState({
+    amount: "",
+    password: "",
+    weight: "",
+    weightRange: "",
+    showPassword: false,
+  });
 
-//import { Button } from "../../styles/styles.js";
-
-
-function ItemTable() {
-  const [material, setMaterial] = useState([]);
-  useEffect(() => {
-    Axios.get("/api/list_items/").then((res) => {
-      setMaterial(res.data);
-      console.log("tabulka s daty: ", res.data);
-    });
-  }, []);
-
-  const postDelete = (id, e) => {
-    e.preventDefault();
-    Axios.delete(`/api/item_delete/${id}`)
-      .then((res) => console.log("Deleted!", res))
-      .catch((err) => console.log(err));
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
   };
 
-  const columns = useMemo(() => ITEM_COLUMNS, []);
-  const data = useMemo(() => material);
+  const handleClickShowPassword = () => {
+    setValues({
+      ...values,
+      showPassword: !values.showPassword,
+    });
+  };
 
-  const defaultColumn = React.useMemo(
-    () => ({
-      Filter: ColumnFilter,
-    }),
-    []
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    //footerGroups,
-    page,
-    nextPage,
-    previousPage,
-    canNextPage,
-    canPreviousPage,
-    pageOptions,
-    prepareRow,
-    setPageSize,
-    state,
-    setGlobalFilter,
-    selectedFlatRows,
-    allColumns,
-    getToggleHideAllColumnsProps,
-  } = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-    },
-    useFilters,
-    useGlobalFilter,
-    useSortBy,
-    usePagination,
-    useRowSelect,
-    (hooks) => {
-      hooks.visibleColumns.push((columns) => [
-        {
-          id: "selection",
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <CheckboxTable {...getToggleAllRowsSelectedProps()} />
-          ),
-          Cell: ({ row }) => (
-            <CheckboxTable {...row.getToggleRowSelectedProps()} />
-          ),
-        },
-        ...columns,
-      ]);
-    }
-  );
-
-  const { globalFilter, pageIndex, pageSize } = state;
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   return (
-    <>
+    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
       <div>
-        {/* <FormGroup>
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="Label"
+        <TextField
+          label="With normal TextField"
+          id="outlined-start-adornment"
+          sx={{ m: 1, width: "25ch" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">kg</InputAdornment>
+            ),
+          }}
+        />
+        <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+          <OutlinedInput
+            id="outlined-adornment-weight"
+            value={values.weight}
+            onChange={handleChange("weight")}
+            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+            aria-describedby="outlined-weight-helper-text"
+            inputProps={{
+              "aria-label": "weight",
+            }}
           />
-          <FormControlLabel disabled control={<Checkbox />} label="Disabled" />
-        </FormGroup> */}
-        <div>
-          <CheckboxTable {...getToggleHideAllColumnsProps()} /> Zobraz vše
-        </div>
-        {allColumns.map((column) => (
-          <div key={column.id}>
-            <label>
-              <input type="checkbox" {...column.getToggleHiddenProps()} />{" "}
-              {column.Header}
-            </label>
-          </div>
-        ))}
-        <br />
+          <FormHelperText id="outlined-weight-helper-text">
+            Weight
+          </FormHelperText>
+        </FormControl>
+        <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={values.showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={handleChange("password")}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            value={values.amount}
+            onChange={handleChange("amount")}
+            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            label="Amount"
+          />
+        </FormControl>
       </div>
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render("Header")}
-                  <span>
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <BsFillArrowDownSquareFill />
-                      ) : (
-                        <BsFillArrowUpSquareFill />
-                      )
-                    ) : (
-                      <BsSortDown />
-                    )}
-                  </span>
-
-                  <div>{column.canFilter ? column.render("Filter") : null}</div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-        {/* tfoot slouží k zobrazení legendy tabulky po tabulkou - je deaktivováno */}
-        {/* <tfoot>
-        {footerGroups.map((footerGroop) => (
-          <tr {...footerGroop.getFooterGroupProps()}>
-            {footerGroop.headers.map((column) => (
-              <td {...column.getFooterProps}>{column.render("Footer")}</td>
-            ))}
-          </tr>
-        ))}
-      </tfoot> */}
-      </table>
       <div>
-        <span>
-          Strana{" "}
-          <strong>
-            {pageIndex + 1} z {pageOptions.length}
-          </strong>
-        </span>
-        <select
-          value={pageSize}
-          onChange={(e) => setPageSize(Number(e.target.value))}
-        >
-          {[10, 20, 30, 50, 100].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Stran {pageSize}
-            </option>
-          ))}
-        </select>
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {" "}
-          -1{" "}
-        </button>
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {" "}
-          +1{" "}
-        </button>
+        <TextField
+          label="With normal TextField"
+          id="filled-start-adornment"
+          sx={{ m: 1, width: "25ch" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">kg</InputAdornment>
+            ),
+          }}
+          variant="filled"
+        />
+        <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
+          <FilledInput
+            id="filled-adornment-weight"
+            value={values.weight}
+            onChange={handleChange("weight")}
+            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+            aria-describedby="filled-weight-helper-text"
+            inputProps={{
+              "aria-label": "weight",
+            }}
+          />
+          <FormHelperText id="filled-weight-helper-text">Weight</FormHelperText>
+        </FormControl>
+        <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
+          <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
+          <FilledInput
+            id="filled-adornment-password"
+            type={values.showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={handleChange("password")}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }} variant="filled">
+          <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
+          <FilledInput
+            id="filled-adornment-amount"
+            value={values.amount}
+            onChange={handleChange("amount")}
+            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          />
+        </FormControl>
       </div>
-      {/* <Button type="delete" onClick={(e) => postDelete(material?.m_ser.id, e)}> */}
-      <button
-        type="delete"
-        color={"red"}
-        disabled={selectedFlatRows.length < 1}
-        onClick={(e) =>
-          selectedFlatRows.map((row) => postDelete(row.original.id, e))
-        }
-      >
-        Vymazat
-      </button>
-      {/* <pre>
-        <code>
-          {JSON.stringify(
-            {
-              selectedFlatRows: selectedFlatRows.map((row) => row.original),
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre> */}
-    </>
+      <div>
+        <TextField
+          label="With normal TextField"
+          id="standard-start-adornment"
+          sx={{ m: 1, width: "25ch" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">kg</InputAdornment>
+            ),
+          }}
+          variant="standard"
+        />
+        <FormControl variant="standard" sx={{ m: 1, mt: 3, width: "25ch" }}>
+          <Input
+            id="standard-adornment-weight"
+            value={values.weight}
+            onChange={handleChange("weight")}
+            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+            aria-describedby="standard-weight-helper-text"
+            inputProps={{
+              "aria-label": "weight",
+            }}
+          />
+          <FormHelperText id="standard-weight-helper-text">
+            Weight
+          </FormHelperText>
+        </FormControl>
+        <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
+          <InputLabel htmlFor="standard-adornment-password">
+            Password
+          </InputLabel>
+          <Input
+            id="standard-adornment-password"
+            type={values.showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={handleChange("password")}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+          <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>
+          <Input
+            id="standard-adornment-amount"
+            value={values.amount}
+            onChange={handleChange("amount")}
+            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          />
+        </FormControl>
+      </div>
+    </Box>
   );
 }
-
-export default ItemTable;

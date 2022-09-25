@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useField} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Axios from 'axios'
@@ -16,28 +16,32 @@ import {
   InputAdornment,
 } from "@mui/material";
 
-// import {
-//   JPinput,
-//   selectStyle,
-//   JPLabel,
-//   JPError,
-//   errorStyle,
-// } from '../../styles/styles.js'
-
-
-
 //function AddItemForm () {
-const AddItemForm = () => {
+const UpdateItemForm = () => {
   
-  // const [itemType, setItemType] = useState([]);
+  let { materialId } = useParams();
 
-  //   useEffect(() => {
-  //       Axios.get('/api/item_types/')
-  //       .then(res => {
-  //       console.log("MaterialTypes: ", res.data)
-  //       setItemType(res.data)      
-  //       }).catch(err => console.log(err))
-  //   }, [])
+  let [material, setMaterial] = useState([])
+  let [materialType, setMaterialType] = useState([])
+
+  useEffect(() => {
+    getMaterial();
+    getMaterialType();
+  }, [materialId]);
+
+    let getMaterial = async () => {
+      let response = await fetch(`/api/item_detail/${materialId}`);
+      let data = await response.json();
+      console.log("načtená data:",data.m_ser)
+      setMaterial(data.m_ser);
+    };
+  
+  let getMaterialType = async () => {
+    let response = await fetch('/api/item_types/')
+    let data = await response.json()
+    //console.log(data)
+    setMaterialType(data)
+  }
 
     const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
 
@@ -51,13 +55,15 @@ const AddItemForm = () => {
   });
 
   const initialValues = {
-    name: "",
-    itemType: "",
-    costs: 0,
-    supplier: "",
-    link: "",
-    note: "",
+    name: material?.name ?? "",
+    itemType: "Vyberte typ...", //material.type.name,
+    costs: material?.costs ?? "",
+    supplier: material?.supplier ?? "",
+    link: material?.link ?? "",
+    note: material?.note ?? "",
   };
+
+  // const initialValues = (material)
 
   const navigate = useNavigate();
 
@@ -70,7 +76,7 @@ const AddItemForm = () => {
         note
     } = values;
     console.log("values: : ", values);
-    Axios.post('/api/item_add/', {
+    Axios.put(`/api/item_update/${materialId}/`, {
         name,
         itemType,
         costs,
@@ -79,7 +85,7 @@ const AddItemForm = () => {
         note
     })
     .then(res => {
-        console.log("Adding Item: : ", res);
+        console.log("Updating Item: : ", res);
         console.log("type: ",res.data.type);
         navigate('/material')
     }).catch(err => console.log(err))
@@ -103,6 +109,8 @@ const AddItemForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize={true}
+      // values={material}
       onSubmit={async (values, { resetForm }) => {
         await onSubmit(values);
         resetForm();
@@ -130,13 +138,18 @@ const AddItemForm = () => {
                 gutterBottom //vytvoří mezeru pod textem
                 >Povinné údaje
               </Typography>
-              <TextField id="name" name="name" label="Název" variant="outlined" required />
+              <TextField id="name" InputLabelProps={{
+            shrink: true,
+          }} name="name" label="Název" variant="outlined" required />
             </Grid>
             <Grid item xs={12}>
                <Select
                 name="itemType"
                 // size="small"
                 label="Typ materiálu ..."
+                InputLabelProps={{
+            shrink: true,
+          }}
                 //options={productOptions}
                 required
               > 
@@ -150,6 +163,9 @@ const AddItemForm = () => {
               <TextField 
                 id="costs" 
                 name="costs" 
+                InputLabelProps={{
+            shrink: true,
+          }}
                 // size="small"
                 label="Cena materiálu (za kus/jednotku)" 
                 helperText="Zadejte prosím pouze celé číslo (bez haléřů)"
@@ -166,13 +182,19 @@ const AddItemForm = () => {
                 gutterBottom //vytvoří mezeru pod textem
                 >Nepovinné údaje
               </Typography>
-              <TextField id="supplier" name="supplier" label="Dodavatel / Obchod" variant="outlined" />
+              <TextField id="supplier" InputLabelProps={{
+            shrink: true,
+          }} name="supplier" label="Dodavatel / Obchod" variant="outlined" />
             </Grid>
             <Grid item xs={12}>
-              <TextField id="link" name="link" label="Odkaz na materiál" helperText="Zadejte prosím platný odkaz" variant="outlined" />
+              <TextField id="link" name="link" InputLabelProps={{
+            shrink: true,
+          }} label="Odkaz na materiál" helperText="Zadejte prosím platný odkaz" variant="outlined" />
             </Grid>
             <Grid item xs={12}>
-              <TextField id="note" name="note" label="Poznámka" multiline rows={6} variant="outlined" />
+              <TextField id="note" name="note" InputLabelProps={{
+            shrink: true,
+          }} label="Poznámka" multiline rows={6} variant="outlined" />
             </Grid>
 
             <Grid item xs={12}>
@@ -221,4 +243,4 @@ const AddItemForm = () => {
     
   );
 };
-export default AddItemForm
+export default UpdateItemForm

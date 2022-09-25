@@ -1,6 +1,6 @@
-* {
+/* * {
     box-sizing: border-box;
-    /* flex: 1 */
+
 }
 
 body {
@@ -61,4 +61,4 @@ img {
 
 .nav li:hover {
     background-color: #777;
-}
+} */
