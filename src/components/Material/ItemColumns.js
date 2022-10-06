@@ -27,6 +27,13 @@ export const ITEM_COLUMNS = [
     Header: "Cena ",
     Footer: "Cena",
     accessor: "costs",
+    Cell: ({ row }) => {
+      return `${row.original.costs} Kč`;}
+  },
+  {
+    Header: "Jednotka ",
+    Footer: "Jednotka",
+    accessor: "unit",
   },
   {
     Header: "Dodavatel ",

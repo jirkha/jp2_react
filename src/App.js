@@ -11,6 +11,7 @@ import { Container } from "@mui/material";
 // import Header from "./components/Header";
 import ListMaterialPage from "./pages/ListMaterialPage";
 import MaterialPage from "./pages/MaterialPage";
+import StockPage from "./pages/StockPage";
 import UpdateMaterialPage from "./pages/UpdateMaterialPage";
 import TestPage_old from "./pages/TestPage_old";
 import {TestPage} from "./pages/TestPage";
@@ -42,6 +43,7 @@ function App() {
               path="/material/:materialId"
               element={<MaterialPage />}
             ></Route>
+            <Route path="/stock" element={<StockPage />}></Route>
           </Routes>
         </Container>
         {/* </main> */}

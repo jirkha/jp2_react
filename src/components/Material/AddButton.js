@@ -2,7 +2,7 @@
 import React from 'react'
 //import { Link } from 'react-router-dom'
 import { HashLink as Link } from "react-router-hash-link";
-import ControlPointTwoToneIcon from "@mui/icons-material/ControlPointTwoTone";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export const AddButton = (props) => {
   return (
@@ -10,7 +10,7 @@ export const AddButton = (props) => {
     //     <AddIcon />
     // </Link>
     <Link to={props.link}>
-      <ControlPointTwoToneIcon color="primary" fontSize="inherit" />
+      <AddCircleOutlineIcon color={props.color} fontSize={props.fontSize} />
     </Link>
   );
 }

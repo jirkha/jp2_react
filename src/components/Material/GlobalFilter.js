@@ -10,7 +10,7 @@ export const GlobalFilter = ({ filter, setFilter }) => {
   return (
     <TextField
       component="span"
-      label="Najdi v seznamu materiálu ..."
+      label="Najdi v seznamu ..."
       variant="standard"
       size="small"
       fullWidth

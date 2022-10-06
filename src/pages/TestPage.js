@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Stack, Divider, Grid } from "@mui/material";
+import { Box, Stack, Divider, Grid, Typography } from "@mui/material";
 import { CheckboxTable } from "C://Users/vecko/jp_2.0/jp2_react/src/components/Global/Checkbox";
 
 export  const TestPage = () => {
@@ -231,7 +231,6 @@ export  const TestPage = () => {
             <CheckboxTable />
           </Box>
         </Box>
-      
       </Stack>
       {/* Grid se používá pro vícerozměné rozvržení položek
       xs = mobilní obrazovka
@@ -379,18 +378,26 @@ export  const TestPage = () => {
       </Grid>
 
       {/* <Box sx={{ flexGrow: 1 }}> */}
-        <Grid
-          container
-          spacing={{ xs: 1, md: 2 }}
-          columns={{ xs: 4, sm: 12, md: 12 }}
-        >
-          {Array.from(Array(10)).map((_, index) => (
-            <Grid item xs={2} sm={3} md={2} key={index}>
-              <CheckboxTable />
-            </Grid>
-          ))}
-        </Grid>
+      <Grid
+        container
+        spacing={{ xs: 1, md: 2 }}
+        columns={{ xs: 4, sm: 12, md: 12 }}
+      >
+        {Array.from(Array(10)).map((_, index) => (
+          <Grid item xs={2} sm={3} md={2} key={index}>
+            <CheckboxTable />
+          </Grid>
+        ))}
+      </Grid>
       {/* </Box> */}
+      <Stack
+        direction={{ sm: "column", md: "row" }}
+        spacing={{ xs: 1, sm: 2, md: 4 }}
+      >
+        <Typography>Item 1</Typography>
+        <Typography>Item 2</Typography>
+        <Typography>Item 3</Typography>
+      </Stack>
     </>
   );}
 

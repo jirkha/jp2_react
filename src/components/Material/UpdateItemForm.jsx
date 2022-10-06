@@ -5,8 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Axios from 'axios'
 //import { FormikTextField } from 'formik-material-fields';
 import TextField from "../Global/Textfield"
-import Select from "../Global/Select"
-import DateTimePicker from "../Global/DateTimePicker"
+import ItemTypesWrapper from "../Global/Select/ItemTypesWrapper";
 
 import { 
   Typography,
@@ -114,7 +113,7 @@ const UpdateItemForm = () => {
       onSubmit={async (values, { resetForm }) => {
         await onSubmit(values);
         resetForm();
-        navigate('/');
+        //navigate('/');
       }}
     >
       {({ isValid }) => (
@@ -143,7 +142,7 @@ const UpdateItemForm = () => {
           }} name="name" label="Název" variant="outlined" required />
             </Grid>
             <Grid item xs={12}>
-               <Select
+               <ItemTypesWrapper
                 name="itemType"
                 // size="small"
                 label="Typ materiálu ..."
@@ -153,7 +152,7 @@ const UpdateItemForm = () => {
                 //options={productOptions}
                 required
               > 
-                </Select>               
+                </ItemTypesWrapper>               
               {/* <Field name="itemType" as="select" className="select">
                 <option value={""}>Vyberte ze seznamu...</option>
                 {productOptions}

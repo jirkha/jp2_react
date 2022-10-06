@@ -1,9 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import { Link, useParams } from 'react-router-dom';
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Button, Container, Typography, Divider, Grid } from "@mui/material";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import Axios from 'axios'
+import Axios from "axios";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Button, Container, Typography, Divider, Grid } from "@mui/material";
+
 
 const MaterialPage = () => {
 
@@ -17,17 +20,23 @@ const MaterialPage = () => {
     }, [materialId])
 
     let getMaterial = async () => {
-        let response = await fetch(`/api/item_detail/${materialId}`)
-        let data = await response.json()
-        setMaterial(data)
+        Axios.get(`/api/item_detail/${materialId}`).then((res) => {
+          setMaterial(res.data);
+          console.log("Data načtena");
+        });
     }
 
+    const navigate = useNavigate(); 
 
     const postDelete = (id, e) => {
       e.preventDefault();
       Axios.delete(`/api/item_delete/${id}`)
-      .then(res => console.log("Deleted!", res)
-    ).catch(err => console.log(err))
+        .then(() => {
+          console.log("Deleted!");
+          getMaterial();
+          navigate("/material");
+        })
+        .catch((err) => console.log(err));
   }
     
     return (
@@ -134,14 +143,19 @@ const MaterialPage = () => {
 
         <Button
           type="delete"
-          variant="outlined"
+          variant="contained"
+          startIcon={<DeleteIcon />}
           color="error"
           onClick={(e) => postDelete(material?.m_ser.id, e)}
         >
           Vymazat
         </Button>
-        <Button variant="outlined" color="primary">
-          <Link to={`/edit_material/${material?.m_ser.id}`}>Upravit</Link>
+        <Button
+          variant="contained"
+          href={`/edit_material/${material?.m_ser.id}`}
+          color="primary"
+        >
+          Upravit
         </Button>
       </Container>
     );

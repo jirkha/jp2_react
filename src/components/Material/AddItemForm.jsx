@@ -5,8 +5,10 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Axios from 'axios'
 //import { FormikTextField } from 'formik-material-fields';
 import TextField from "../Global/Textfield"
-import Select from "../Global/Select"
-import DateTimePicker from "../Global/DateTimePicker"
+import ItemTypesWrapper from "../Global/Select/ItemTypesWrapper"
+
+import * as AddButton from './AddButton';
+import SelectWrapper from '../Global/SelectWrapper';
 
 import { 
   Typography,
@@ -14,21 +16,17 @@ import {
   Box,
   Button,
   InputAdornment,
+  Select,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Stack,
 } from "@mui/material";
 
-// import {
-//   JPinput,
-//   selectStyle,
-//   JPLabel,
-//   JPError,
-//   errorStyle,
-// } from '../../styles/styles.js'
 
-
-
-//function AddItemForm () {
 const AddItemForm = () => {
   
+
   // const [itemType, setItemType] = useState([]);
 
   //   useEffect(() => {
@@ -39,12 +37,28 @@ const AddItemForm = () => {
   //       }).catch(err => console.log(err))
   //   }, [])
 
+  // const [material, setMaterial] = useState([]);
+
+// useEffect(() => {
+//   getMaterial();
+// }, []);
+
+// const getMaterial = () => {
+//   Axios.get("/api/list_items/").then((res) => {
+//     setMaterial(res.data);
+//     console.log("Data načtena");
+//     console.log("res.data", res.data);
+//   });
+// };
+
+
     const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
 
   const validationSchema = Yup.object({
     itemType: Yup.string().required("Prosím vyberte typ materiálu"),//.oneOf(itemType),
     name: Yup.string().required("Prosím zadejte název položky"),
     costs: Yup.number().min(0).max(1000000000).required("Prosím zadejte cenu položky (minimálně 0 a maximálně 1 000 000 000 Kč)"),
+    unit: Yup.string().required("Prosím vyberte jednotku"),
     supplier: Yup.string(),
     link: Yup.string().matches(re,'Zadejte prosím platný odkaz'),
     note: Yup.string()
@@ -54,6 +68,7 @@ const AddItemForm = () => {
     name: "",
     itemType: "",
     costs: 0,
+    unit: "",
     supplier: "",
     link: "",
     note: "",
@@ -65,6 +80,7 @@ const AddItemForm = () => {
     const { name,
         itemType,
         costs,
+        unit,
         supplier,
         link,
         note
@@ -74,22 +90,18 @@ const AddItemForm = () => {
         name,
         itemType,
         costs,
+        unit,
         supplier,
         link,
         note
     })
     .then(res => {
-        console.log("Adding Item: : ", res);
-        console.log("type: ",res.data.type);
+        console.log("Adding Item: ", res);
+        console.log("type: ", res.data.type);
+        // getMaterial()
         navigate('/material')
     }).catch(err => console.log(err))
   }
-
-
-  //declaration of products
-  //declaration of validationSchema
-  //declaration of initialValues
-  //declaration of onSubmit callback
 
 //   const productOptions = itemType.map((opt, index) => (<option key={index} value={opt.id}>
 //  {opt.name}
@@ -97,6 +109,14 @@ const AddItemForm = () => {
 // ));
 
   // const renderError = (message) => <p style={errorStyle}>{message}</p>;
+
+  const optionsUnit = {
+  "ks": "ks",
+  "g": "g",
+  "kg": "kg",
+  "l": "l",
+  "ml": "ml",
+  };
   
 
   return (
@@ -106,7 +126,7 @@ const AddItemForm = () => {
       onSubmit={async (values, { resetForm }) => {
         await onSubmit(values);
         resetForm();
-        navigate('/');
+        //navigate('/');
       }}
     >
       {({ isValid }) => (
@@ -116,9 +136,9 @@ const AddItemForm = () => {
           container 
           spacing={2}
           // justifyContent="center"
-          direction="column"
-          maxWidth="550px"
-          //alignItems="baseline"
+          //direction="column"
+          maxWidth="430px"
+          alignItems="flex-start"
           >
             {/* <JPLabel className="label" htmlFor="name">
             </JPLabel> */}
@@ -132,21 +152,24 @@ const AddItemForm = () => {
               </Typography>
               <TextField id="name" name="name" label="Název" variant="outlined" required />
             </Grid>
-            <Grid item xs={12}>
-               <Select
+            <Grid item xs={10}>
+               <ItemTypesWrapper
                 name="itemType"
                 // size="small"
                 label="Typ materiálu ..."
                 //options={productOptions}
                 required
               > 
-                </Select>               
+                </ItemTypesWrapper>              
               {/* <Field name="itemType" as="select" className="select">
                 <option value={""}>Vyberte ze seznamu...</option>
                 {productOptions}
               </Field> */}
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={2}>
+              <AddButton.AddButton fontSize="large" color="success" link="#itemTypeForm" />              
+            </Grid>
+            <Grid item xs={6}>
               <TextField 
                 id="costs" 
                 name="costs" 
@@ -154,10 +177,23 @@ const AddItemForm = () => {
                 label="Cena materiálu (za kus/jednotku)" 
                 helperText="Zadejte prosím pouze celé číslo (bez haléřů)"
                 InputProps={{
-                  endAdornment: <InputAdornment position='end'>Kč / ks (jednotka)</InputAdornment>
+                  endAdornment: <InputAdornment position='end'>Kč</InputAdornment>
                 }}
                 required variant="outlined" />
             </Grid>
+            <Grid item xs={6}>
+              <FormControl fullWidth required>
+                <SelectWrapper
+                  //id="unit" 
+                  name="unit" 
+                  //value={unit}
+                  label="Jednotka"
+                  options={optionsUnit}
+                >
+                </SelectWrapper>
+              </FormControl>
+            </Grid>
+         
             <Grid item xs={12}>
               <Typography
                 variant="subtitle2"

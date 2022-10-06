@@ -5,7 +5,7 @@ import Axios from "axios";
 
 // vysvětlení kódu: https://www.youtube.com/watch?v=MV9NC3FoCmM&ab_channel=SimpleTut
 
-const SelectWrapper = ({ name, options, ...otherProps }) => {
+const ItemTypesWrapper = ({ name, options, ...otherProps }) => {
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
 
@@ -62,4 +62,4 @@ const SelectWrapper = ({ name, options, ...otherProps }) => {
   );
 };
 
-export default SelectWrapper;
+export default ItemTypesWrapper;
