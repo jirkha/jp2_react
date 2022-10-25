@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
@@ -8,6 +8,9 @@ import DateTimePicker from "../Global/DateTimePicker";
 
 import * as AddButton from "../Material/AddButton";
 import ItemWrapper from "../Global/Select/ItemWrapper";
+import { useDispatch, useSelector } from "react-redux";
+import { getStorage } from "../Store/Features/Material/storageSlice";
+import { getMaterial } from "../Store/Features/Material/materialSlice";
 
 import {
   Typography,
@@ -17,17 +20,14 @@ import {
   InputAdornment,
 } from "@mui/material";
 
-const StorageForm = () => {
-  const [item, setItem] = useState("");
 
-  useEffect(() => {
-    Axios.get("/api/items/")
-      .then((res) => {
-        console.log("Items: ", res.data);
-        setItem(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+const StorageForm = () => {
+  const dispatch = useDispatch();
+  const item = useSelector((state) => state.material.data)
+
+useEffect(() => {
+  dispatch(getMaterial());
+}, []);
 
   const validationSchema = Yup.object({
     day_of_storage: "",
@@ -62,6 +62,7 @@ const StorageForm = () => {
       .then((res) => {
         console.log("Adding Storage: ", res);
         console.log("item: ", res.day_of_storage);
+        dispatch(getStorage());
         //navigate("/material");
       })
       .catch((err) => console.log(err));
@@ -71,7 +72,8 @@ const StorageForm = () => {
   // pak přiřadí "data", tedy "id" z načteného API seznamu Items příslučnému "item"
   // nakonec u nalezeného item zobrazí atribut "unit", tedy jednotku přiřazenou danému item
   function showUnit(data) {
-    // console.log("doIt:",data);
+    // console.log("item_storage:",item);
+    // console.log("data_storage:", data);
     var filtered = Object.fromEntries(
       Object.entries(item).filter(([k, v]) => v.id === data)
     );
@@ -138,7 +140,7 @@ const StorageForm = () => {
                     <AddButton.AddButton
                       fontSize="large"
                       color="success"
-                      link="#itemTypeForm"
+                      link="/material#itemForm"
                     />
                   </Grid>
                   <Grid item xs={12}>

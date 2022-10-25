@@ -86,10 +86,12 @@ import { Tab } from "@mui/material";
 
 
 const navigationLinks = [
-  { name: "Materiál", href: "/material" },
-  { name: "Sklad", href: "/stock" },
   { name: "Test1", href: "/testpage" },
   { name: "Test2", href: "/testpage2" },
+  { name: "Materiál", href: "/material" },
+  { name: "Sklad", href: "/stock" },
+  { name: "Produkty", href: "/product" },
+  { name: "Transakce", href: "/transaction" },
 ];
 
 export default function NavbarJP() {

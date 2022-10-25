@@ -5,6 +5,9 @@ import { Formik, Form } from "formik";
 import Axios from 'axios'
 import TextField from "../Global/Textfield"
 
+import { useDispatch } from "react-redux";
+import { getProductType } from "../Store/Features/Products/productTypeSlice";
+
 import { 
   Typography,
   Grid,
@@ -13,8 +16,9 @@ import {
 } from "@mui/material";
 
 
-const AddItemTypeForm = () => {
+const AddProductTypeForm = () => {
 
+  const dispatch = useDispatch();
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Prosím zadejte název")
@@ -30,13 +34,14 @@ const AddItemTypeForm = () => {
     const { name
     } = values;
     console.log("values: : ", values);
-    Axios.post('/api/itemType_add/', {
+    Axios.post('/api/productType_add/', {
         name
     })
     .then(res => {
-        console.log("Adding ItemType: : ", res);
-        //console.log("itemType: ",res.data.type);
-        navigate('/material')
+        console.log("Adding ProductType: ", res);
+        console.log("productType: ",res.data);
+        dispatch(getProductType());
+        navigate("/product#productForm");
     }).catch(err => console.log(err))
   }
 
@@ -47,7 +52,6 @@ const AddItemTypeForm = () => {
       onSubmit={async (values, { resetForm }) => {
         await onSubmit(values);
         resetForm();
-        //navigate('/');
       }}
     >
       {({ isValid }) => (
@@ -89,4 +93,4 @@ const AddItemTypeForm = () => {
     
   );
 };
-export default AddItemTypeForm
+export default AddProductTypeForm

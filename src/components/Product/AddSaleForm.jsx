@@ -8,125 +8,79 @@ import TextField from "../Global/Textfield"
 import ItemTypesWrapper from "../Global/Select/ItemTypesWrapper"
 // import { HashLink as Link } from "react-router-hash-link";
 
-import * as AddButton from './AddButton';
-import SelectWrapper from '../Global/Select/SelectWrapper';
-import { useDispatch } from "react-redux";
-import { getMaterial } from "../Store/Features/Material/materialSlice";
+import * as AddButton from '../Material/AddButton';
+import SelectArrayWrapper from '../Global/Select/SelectArrayWrapper';
+import { useDispatch, useSelector } from "react-redux";
+import { getSale } from "../Store/Features/Products/saleSlice";
+import { getSaleType } from "../Store/Features/Products/saleTypeSlice";
 
 import { 
   Typography,
   Grid,
   Box,
   Button,
-  InputAdornment,
-  Select,
-  InputLabel,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
   FormControl,
-  MenuItem,
-  Stack,
 } from "@mui/material";
 
 
-const AddItemForm = () => {
-  
-// useEffect(() => {
-//   dispatch(getMaterial());
-// }, []);
-
-//const material = useSelector((state) => state.material.data)
+const AddSaleForm = () => {
 
 const dispatch = useDispatch();
-  // const [itemType, setItemType] = useState([]);
 
-  //   useEffect(() => {
-  //       Axios.get('/api/item_types/')
-  //       .then(res => {
-  //       console.log("MaterialTypes: ", res.data)
-  //       setItemType(res.data)      
-  //       }).catch(err => console.log(err))
-  //   }, [])
+const saleType = useSelector((state) => state.saleType.data)
 
-  // const [material, setMaterial] = useState([]);
-
-// useEffect(() => {
-//   getMaterial();
-// }, []);
-
-// const getMaterial = () => {
-//   Axios.get("/api/list_items/").then((res) => {
-//     setMaterial(res.data);
-//     console.log("Data načtena");
-//     console.log("res.data", res.data);
-//   });
-// };
-
-
-    const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
+useEffect(() => {
+  dispatch(getSaleType());
+  console.log("saleType: ",saleType)
+}, [SelectArrayWrapper]);
 
   const validationSchema = Yup.object({
-    itemType: Yup.string().required("Prosím vyberte typ materiálu"),//.oneOf(itemType),
-    name: Yup.string().required("Prosím zadejte název položky"),
-    costs: Yup.number().min(0).max(1000000000).required("Prosím zadejte cenu položky (minimálně 0 a maximálně 1 000 000 000 Kč)"),
-    unit: Yup.string().required("Prosím vyberte jednotku"),
-    supplier: Yup.string(),
-    link: Yup.string().matches(re,'Zadejte prosím platný odkaz'),
+    name: Yup.string().required("Prosím zadejte název prodejního kanálu"),//.oneOf(itemType),
+    type: Yup.string().required("Prosím vyberte typ prodejního kanálu"),
+    brand: Yup.bool(), //JPcandles A/N
     note: Yup.string()
   });
 
   const initialValues = {
     name: "",
-    itemType: "",
-    costs: 0,
-    unit: "",
-    supplier: "",
-    link: "",
-    note: "",
+    type: "",
+    brand: true,
+    note: ""
   };
 
   const navigate = useNavigate();
 
   const onSubmit = (values) => {
-    const { name,
-        itemType,
-        costs,
-        unit,
-        supplier,
-        link,
+    const { 
+        name,
+        type,
+        brand,
         note
     } = values;
     console.log("values: : ", values);
-    Axios.post('/api/item_add/', {
+    Axios.post('/api/sale_add/', {
         name,
-        itemType,
-        costs,
-        unit,
-        supplier,
-        link,
+        type,
+        brand,
         note
     })
     .then(res => {
-        console.log("Adding Item: ", res);
-        console.log("type: ", res.data.type);
-        dispatch(getMaterial()); //aktualizuje seznam materiálu
+        console.log("Adding Sale: ", res);
+        dispatch(getSale()); //aktualizuje seznam prodejních kanálů
         //navigate('/material')
     }).catch(err => console.log(err))
   }
 
+  console.log("saleType: ",saleType)
 //   const productOptions = itemType.map((opt, index) => (<option key={index} value={opt.id}>
 //  {opt.name}
 //  </option>
 // ));
 
   // const renderError = (message) => <p style={errorStyle}>{message}</p>;
-
-  const optionsUnit = {
-  "ks": "ks",
-  "g": "g",
-  "kg": "kg",
-  "l": "l",
-  "ml": "ml",
-  };
-  
 
   return (
     <Formik
@@ -149,8 +103,6 @@ const dispatch = useDispatch();
           maxWidth="430px"
           alignItems="flex-start"
           >
-            {/* <JPLabel className="label" htmlFor="name">
-            </JPLabel> */}
             <Grid item xs={12}>
               <Typography
                 variant="subtitle2"
@@ -161,24 +113,20 @@ const dispatch = useDispatch();
               </Typography>
               <TextField id="name" name="name" label="Název" variant="outlined" required />
             </Grid>
-            <Grid item xs={10}>
+            {/* <Grid item xs={10}>
                <ItemTypesWrapper
-                name="itemType"
+                name="product_type"
                 // size="small"
-                label="Typ materiálu ..."
+                label="Typ produktu ..."
                 //options={productOptions}
                 required
               > 
                 </ItemTypesWrapper>              
-              {/* <Field name="itemType" as="select" className="select">
-                <option value={""}>Vyberte ze seznamu...</option>
-                {productOptions}
-              </Field> */}
             </Grid>
             <Grid item xs={2}>
               <AddButton.AddButton fontSize="large" color="success" link="#itemTypeForm" />              
-            </Grid>
-            <Grid item xs={6}>
+            </Grid> */}
+            {/* <Grid item xs={6}>
               <TextField 
                 id="costs" 
                 name="costs" 
@@ -189,20 +137,20 @@ const dispatch = useDispatch();
                   endAdornment: <InputAdornment position='end'>Kč</InputAdornment>
                 }}
                 required variant="outlined" />
-            </Grid>
-            <Grid item xs={6}>
+            </Grid> */}
+            <Grid item xs={12}>
               <FormControl fullWidth required>
-                <SelectWrapper
+                <SelectArrayWrapper
                   //id="unit" 
-                  name="unit" 
+                  name="type" 
                   //value={unit}
-                  label="Jednotka"
-                  options={optionsUnit}
+                  label="Typ prodejního kanálu"
+                  options={saleType}
                 >
-                </SelectWrapper>
+                </SelectArrayWrapper>
               </FormControl>
             </Grid>
-         
+                     
             <Grid item xs={12}>
               <Typography
                 variant="subtitle2"
@@ -211,16 +159,12 @@ const dispatch = useDispatch();
                 gutterBottom //vytvoří mezeru pod textem
                 >Nepovinné údaje
               </Typography>
-              <TextField id="supplier" name="supplier" label="Dodavatel / Obchod" variant="outlined" />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField id="link" name="link" label="Odkaz na materiál" helperText="Zadejte prosím platný odkaz" variant="outlined" />
             </Grid>
             <Grid item xs={12}>
               <TextField id="note" name="note" label="Poznámka" multiline rows={6} variant="outlined" />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={3}>
               {/* <Link to="#itemList"> */}
                <Button 
                 type="submit" 
@@ -235,35 +179,19 @@ const dispatch = useDispatch();
               {/* </Link> */}
              
             </Grid>
-
-            
-            {/* <JPinput
-                name="name"
-                type="name"
-                className="input"
-                placeholder="Název"
-              /> */}
-              {/* <ErrorMessage name="name" render={renderError} /> */}
-            {/* </div>
-        
-          </div> */}
-         
-        
-          {/* <div className="field">
-            <JPLabel className="label" htmlFor="itemType">
-              Typ produktu*
-            </JPLabel>
-            <div className="control">
-              <Field name="itemType" style={selectStyle} as="select" className="select">
-                <option value={""}>Vyberte ze seznamu...</option>
-                {productOptions}
-              </Field>
-              <ErrorMessage name="itemType" render={renderError} />
-            </div>
-          </div> */}
-        
-        
-        </Grid>
+            <Grid item xs={9}>
+              <Field
+              as={FormControlLabel}
+              type="checkbox"
+              name="brand"
+              control={<Checkbox />}
+              label="Prodejní kanál pod značkou J&P"
+            />
+              {/* <FormGroup name="brand">
+                <FormControlLabel control={<Checkbox name="brand" defaultChecked />} label="Prodejní kanál pod značkou J&P" />
+              </FormGroup> */}
+            </Grid>
+          </Grid>
         </Box>
       </Form>
       
@@ -272,4 +200,4 @@ const dispatch = useDispatch();
     
   );
 };
-export default AddItemForm
+export default AddSaleForm

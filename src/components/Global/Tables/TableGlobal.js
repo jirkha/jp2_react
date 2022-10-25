@@ -75,7 +75,8 @@ function TableGlobal(props) {
   // };
 
   const columns = useMemo(() => props.columns, []);
-  const data = useMemo(() => props.dataAPI);
+  // const data = useMemo(() => props.dataAPI);
+  const data = props.dataAPI;
 
   const defaultColumn = React.useMemo(
     () => ({

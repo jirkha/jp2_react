@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import TableGlobal from "../Global/Tables/TableGlobal";
 import { REMOVAL_COLUMNS } from "./RemovalColumns";
-import Axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getRemoval } from "../Store/Features/Material/removalSlice";
 
 function TableRemoval() {
-  const [removal, setRemoval] = useState([]);
 
   useEffect(() => {
-    getRemoval();
+    dispatch(getRemoval());
   }, []);
 
-  const getRemoval = () => {
-    Axios.get("/api/list_removal/").then((res) => {
-      //console.log("Storage", res.data);
-      console.log("Data načtena");
-      setRemoval(res.data);
-    });
-  };
+const removal_pre = useSelector((state) => state.removal.data);
+const removal = useMemo(() => removal_pre)
+
+const dispatch = useDispatch();
 
   return (
     <div>

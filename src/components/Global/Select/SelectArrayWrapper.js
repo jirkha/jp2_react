@@ -2,12 +2,14 @@ import React from "react";
 import { TextField, MenuItem } from "@mui/material";
 import { useField, useFormikContext } from "formik";
 
-const SelectWrapper = ({ name, options, ...otherProps }) => {
+const SelectArrayWrapper = ({ name, options, ...otherProps }) => {
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
 
   const handleChange = (evt) => {
     const { value } = evt.target;
+    // console.log("name: ", name);
+    // console.log("value: ", value);
     setFieldValue(name, value);
   };
 
@@ -18,6 +20,11 @@ const SelectWrapper = ({ name, options, ...otherProps }) => {
     variant: "outlined",
     fullWidth: true,
     onChange: handleChange,
+    // SelectProps:{
+    //   multiple: true
+    //   //value: formState.userRoles,
+    //   //onChange: handleFieldChange
+    // }
   };
 
   if (meta && meta.touched && meta.error) {
@@ -26,11 +33,17 @@ const SelectWrapper = ({ name, options, ...otherProps }) => {
   }
 
   return (
-    <TextField {...configSelect}>
+    <TextField
+      {...configSelect}
+    >
       {Object.keys(options).map((item, pos) => {
+        // console.log("options", options);
+        // console.log("item", item);
+        // console.log("pos", pos);
+        // console.log("options[item]['name']", options[item]["name"]);
         return (
-          <MenuItem key={pos} value={item}>
-            {options[item]}
+          <MenuItem key={pos} value={options[item]["id"]}>
+            {options[item]["name"]}
           </MenuItem>
         );
       })}
@@ -38,4 +51,4 @@ const SelectWrapper = ({ name, options, ...otherProps }) => {
   );
 };
 
-export default SelectWrapper;
+export default SelectArrayWrapper;

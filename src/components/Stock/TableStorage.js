@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import TableGlobal from "../Global/Tables/TableGlobal";
 import { STORAGE_COLUMNS } from "../Stock/StorageColumns";
-import Axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getStorage } from "../Store/Features/Material/storageSlice";
 
 function TableStorage() {
-  const [storage, setStorage] = useState([]);
-
+  
   useEffect(() => {
-    getStorage();
+    dispatch(getStorage());
   }, []);
 
-  const getStorage = () => {
-    Axios.get("/api/list_storage/").then((res) => {
-      //console.log("Storage", res.data);
-      console.log("Data načtena");
-      setStorage(res.data);
-    });
-  };
+const storage_pre = useSelector((state) => state.storage.data);
+const storage = useMemo(() => storage_pre);
+
+  const dispatch = useDispatch();
 
   return (
     <div>

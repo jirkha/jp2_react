@@ -1,355 +1,219 @@
-// import * as React from "react";
-// import Box from "@mui/material/Box";
-// import IconButton from "@mui/material/IconButton";
-// import Input from "@mui/material/Input";
-// import FilledInput from "@mui/material/FilledInput";
-// import OutlinedInput from "@mui/material/OutlinedInput";
-// import InputLabel from "@mui/material/InputLabel";
-// import InputAdornment from "@mui/material/InputAdornment";
-// import FormHelperText from "@mui/material/FormHelperText";
-// import FormControl from "@mui/material/FormControl";
-// import TextField from "@mui/material/TextField";
-// import Visibility from "@mui/icons-material/Visibility";
-// import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import React, { useEffect } from "react";
+import Chip from "@mui/material/Chip";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 
-// export default function InputAdornments() {
-//   const [values, setValues] = React.useState({
-//     amount: "",
-//     password: "",
-//     weight: "",
-//     weightRange: "",
-//     showPassword: false,
-//   });
+import { getMaterial } from "../components/Store/Features/Material/materialSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Typography } from "@mui/material";
 
-//   const handleChange = (prop) => (event) => {
-//     setValues({ ...values, [prop]: event.target.value });
-//   };
+export default function Tags() {
 
-//   const handleClickShowPassword = () => {
-//     setValues({
-//       ...values,
-//       showPassword: !values.showPassword,
-//     });
-//   };
+  const dispatch = useDispatch();
 
-//   const handleMouseDownPassword = (event) => {
-//     event.preventDefault();
-//   };
+  const material = useSelector((state) => state.material.data);
 
-//   return (
-//     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-//       <div>
-//         <TextField
-//           label="With normal TextField"
-//           id="outlined-start-adornment"
-//           sx={{ m: 1, width: "25ch" }}
-//           InputProps={{
-//             startAdornment: (
-//               <InputAdornment position="start">kg</InputAdornment>
-//             ),
-//           }}
-//         />
-//         <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-//           <OutlinedInput
-//             id="outlined-adornment-weight"
-//             value={values.weight}
-//             onChange={handleChange("weight")}
-//             endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-//             aria-describedby="outlined-weight-helper-text"
-//             inputProps={{
-//               "aria-label": "weight",
-//             }}
-//           />
-//           <FormHelperText id="outlined-weight-helper-text">
-//             Weight
-//           </FormHelperText>
-//         </FormControl>
-//         <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-//           <InputLabel htmlFor="outlined-adornment-password">
-//             Password
-//           </InputLabel>
-//           <OutlinedInput
-//             id="outlined-adornment-password"
-//             type={values.showPassword ? "text" : "password"}
-//             value={values.password}
-//             onChange={handleChange("password")}
-//             endAdornment={
-//               <InputAdornment position="end">
-//                 <IconButton
-//                   aria-label="toggle password visibility"
-//                   onClick={handleClickShowPassword}
-//                   onMouseDown={handleMouseDownPassword}
-//                   edge="end"
-//                 >
-//                   {values.showPassword ? <VisibilityOff /> : <Visibility />}
-//                 </IconButton>
-//               </InputAdornment>
-//             }
-//             label="Password"
-//           />
-//         </FormControl>
-//         <FormControl fullWidth sx={{ m: 1 }}>
-//           <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-//           <OutlinedInput
-//             id="outlined-adornment-amount"
-//             value={values.amount}
-//             onChange={handleChange("amount")}
-//             startAdornment={<InputAdornment position="start">$</InputAdornment>}
-//             label="Amount"
-//           />
-//         </FormControl>
-//       </div>
-//       <div>
-//         <TextField
-//           label="With normal TextField"
-//           id="filled-start-adornment"
-//           sx={{ m: 1, width: "25ch" }}
-//           InputProps={{
-//             startAdornment: (
-//               <InputAdornment position="start">kg</InputAdornment>
-//             ),
-//           }}
-//           variant="filled"
-//         />
-//         <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
-//           <FilledInput
-//             id="filled-adornment-weight"
-//             value={values.weight}
-//             onChange={handleChange("weight")}
-//             endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-//             aria-describedby="filled-weight-helper-text"
-//             inputProps={{
-//               "aria-label": "weight",
-//             }}
-//           />
-//           <FormHelperText id="filled-weight-helper-text">Weight</FormHelperText>
-//         </FormControl>
-//         <FormControl sx={{ m: 1, width: "25ch" }} variant="filled">
-//           <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
-//           <FilledInput
-//             id="filled-adornment-password"
-//             type={values.showPassword ? "text" : "password"}
-//             value={values.password}
-//             onChange={handleChange("password")}
-//             endAdornment={
-//               <InputAdornment position="end">
-//                 <IconButton
-//                   aria-label="toggle password visibility"
-//                   onClick={handleClickShowPassword}
-//                   onMouseDown={handleMouseDownPassword}
-//                   edge="end"
-//                 >
-//                   {values.showPassword ? <VisibilityOff /> : <Visibility />}
-//                 </IconButton>
-//               </InputAdornment>
-//             }
-//           />
-//         </FormControl>
-//         <FormControl fullWidth sx={{ m: 1 }} variant="filled">
-//           <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
-//           <FilledInput
-//             id="filled-adornment-amount"
-//             value={values.amount}
-//             onChange={handleChange("amount")}
-//             startAdornment={<InputAdornment position="start">$</InputAdornment>}
-//           />
-//         </FormControl>
-//       </div>
-//       <div>
-//         <TextField
-//           label="With normal TextField"
-//           id="standard-start-adornment"
-//           sx={{ m: 1, width: "25ch" }}
-//           InputProps={{
-//             startAdornment: (
-//               <InputAdornment position="start">kg</InputAdornment>
-//             ),
-//           }}
-//           variant="standard"
-//         />
-//         <FormControl variant="standard" sx={{ m: 1, mt: 3, width: "25ch" }}>
-//           <Input
-//             id="standard-adornment-weight"
-//             value={values.weight}
-//             onChange={handleChange("weight")}
-//             endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-//             aria-describedby="standard-weight-helper-text"
-//             inputProps={{
-//               "aria-label": "weight",
-//             }}
-//           />
-//           <FormHelperText id="standard-weight-helper-text">
-//             Weight
-//           </FormHelperText>
-//         </FormControl>
-//         <FormControl sx={{ m: 1, width: "25ch" }} variant="standard">
-//           <InputLabel htmlFor="standard-adornment-password">
-//             Password
-//           </InputLabel>
-//           <Input
-//             id="standard-adornment-password"
-//             type={values.showPassword ? "text" : "password"}
-//             value={values.password}
-//             onChange={handleChange("password")}
-//             endAdornment={
-//               <InputAdornment position="end">
-//                 <IconButton
-//                   aria-label="toggle password visibility"
-//                   onClick={handleClickShowPassword}
-//                   onMouseDown={handleMouseDownPassword}
-//                 >
-//                   {values.showPassword ? <VisibilityOff /> : <Visibility />}
-//                 </IconButton>
-//               </InputAdornment>
-//             }
-//           />
-//         </FormControl>
-//         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-//           <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>
-//           <Input
-//             id="standard-adornment-amount"
-//             value={values.amount}
-//             onChange={handleChange("amount")}
-//             startAdornment={<InputAdornment position="start">$</InputAdornment>}
-//           />
-//         </FormControl>
-//       </div>
-//     </Box>
-//   );
-// }
-
-import React, { useState } from "react";
-import {Link} from "@mui/material";
-// import makeStyles from "@mui/styles/makeStyles";
-import {AppBar} from "@mui/material";
-import {Toolbar} from "@mui/material";
-import {Container} from "@mui/material";
-// import {Avatar} from "@mui/material";
-import { Hidden, Grid, Tabs, Tab } from "@mui/material";
-import {IconButton} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { SwipeableDrawer } from "@mui/material";
-import { Divider } from "@mui/material";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { List } from "@mui/material";
-import { ListItem } from "@mui/material";
-
-const navigationLinks = [
-  { id: 0, name: "Materiál", href: "/material" },
-  { id: 1, name: "Test1", href: "/testpage" },
-  { id: 2, name: "Test2", href: "/testpage2" },
-];
-
-// const useStyles = makeStyles((theme) => ({
-//   link: {
-//     marginRight: 20,
-//   },
-//   avatar: {
-//     marginRight: "auto",
-//     color: "white",
-//     backgroundColor: "black",
-//     borderRadius: 0,
-//     height: 30,
-//     border: "2px solid gray",
-//     borderLeft: "12px solid transparent",
-//     borderRight: "12px solid transparent",
-//   },
-// }));
-
-export default function Header() {
-  //const styles = useStyles();
-  const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(navigationLinks[1].id);
-
-       const handleChange = (event, newValue) => {
-         console.log(newValue);
-         setValue("newValue", newValue.id);
-       };
+  useEffect(() => {
+    dispatch(getMaterial());
+    console.log("material: ", material);
+  }, [dispatch]);
 
   return (
-    <AppBar position="sticky" color="default">
-      <Container >
-        <Toolbar disableGutters>
-          {/* <Avatar className={styles.avatar}>P</Avatar> */}
-          <Grid container>
-            <Grid item xs={12}>
-              <Tabs
-                indicatorColor="secondary"
-                textColor="inherit"
-                value={value.id}
-                onChange={handleChange}
-              >
-                {navigationLinks.map((item) => (
-                  <Tab
-                    //className={styles.link}
-                    sx={{ marginRight: 1 }}
-                    color="textPrimary"
-                    variant="button"
-                    underline="none"
-                    value={item.id}
-                    label={item.name}
-                    href={item.href}
-                    key={item.name}
-                  ></Tab>
-                ))}
-              </Tabs>
-            </Grid>
-          </Grid>
-          {/* <Hidden xsDown>
-            {navigationLinks.map((item) => (
-              <Link
-                //className={styles.link}
-                sx={{ marginRight: 20 }}
-                color="textPrimary"
-                variant="button"
-                underline="none"
-                href={item.href}
-                key={item.name}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </Hidden>
-          <Hidden smUp>
-            <IconButton onClick={() => setOpen(true)}>
-              <MenuIcon />
-            </IconButton>
-          </Hidden> */}
-        </Toolbar>
-      </Container>
-      {/* <SwipeableDrawer
-        anchor="right"
-        open={open}
-        onOpen={() => setOpen(true)}
-        onClose={() => setOpen(false)}
-      >
-        <div
-          onClick={() => setOpen(false)}
-          onKeyPress={() => setOpen(false)}
-          role="button"
-          tabIndex={0}
-        >
-          <IconButton>
-            <ChevronRightIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          {navigationLinks.map((item) => (
-            <ListItem key={item.name}>
-              <Link
-                //className={styles.link}
-                color="textPrimary"
-                variant="button"
-                underline="none"
-                href={item.href}
-              >
-                {item.name}
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-      </SwipeableDrawer> */}
-    </AppBar>
+    <Stack spacing={3} sx={{ width: 500 }}>
+      <Autocomplete
+        multiple
+        options={material}
+        getOptionLabel={(option) => option.name}
+        //defaultValue={[material[0]]}
+        renderInput={(params, index) => (
+            <TextField
+              {...params}
+              key={index}
+              variant="standard"
+              label={index}
+              placeholder="Favorites"
+            />
+        )}
+      />
+      <Autocomplete
+        multiple
+        id="tags-outlined"
+        options={top100Films}
+        getOptionLabel={(option) => option.title}
+        defaultValue={[top100Films[13]]}
+        filterSelectedOptions
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="filterSelectedOptions"
+            placeholder="Favorites"
+          />
+        )}
+      />
+      <Autocomplete
+        multiple
+        id="tags-filled"
+        options={top100Films.map((option) => option.title)}
+        defaultValue={[top100Films[13].title]}
+        freeSolo
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip
+              variant="outlined"
+              label={option}
+              {...getTagProps({ index })}
+            />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="filled"
+            label="freeSolo"
+            placeholder="Favorites"
+          />
+        )}
+      />
+      <Autocomplete
+        multiple
+        id="tags-readOnly"
+        options={top100Films.map((option) => option.title)}
+        defaultValue={[top100Films[12].title, top100Films[13].title]}
+        readOnly
+        renderInput={(params) => (
+          <TextField {...params} label="readOnly" placeholder="Favorites" />
+        )}
+      />
+    </Stack>
   );
 }
+
+// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
+const top100Films = [
+  { title: "The Shawshank Redemption", year: 1994 },
+  { title: "The Godfather", year: 1972 },
+  { title: "The Godfather: Part II", year: 1974 },
+  { title: "The Dark Knight", year: 2008 },
+  { title: "12 Angry Men", year: 1957 },
+  { title: "Schindler's List", year: 1993 },
+  { title: "Pulp Fiction", year: 1994 },
+  {
+    title: "The Lord of the Rings: The Return of the King",
+    year: 2003,
+  },
+  { title: "The Good, the Bad and the Ugly", year: 1966 },
+  { title: "Fight Club", year: 1999 },
+  {
+    title: "The Lord of the Rings: The Fellowship of the Ring",
+    year: 2001,
+  },
+  {
+    title: "Star Wars: Episode V - The Empire Strikes Back",
+    year: 1980,
+  },
+  { title: "Forrest Gump", year: 1994 },
+  { title: "Inception", year: 2010 },
+  {
+    title: "The Lord of the Rings: The Two Towers",
+    year: 2002,
+  },
+  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
+  { title: "Goodfellas", year: 1990 },
+  { title: "The Matrix", year: 1999 },
+  { title: "Seven Samurai", year: 1954 },
+  {
+    title: "Star Wars: Episode IV - A New Hope",
+    year: 1977,
+  },
+  { title: "City of God", year: 2002 },
+  { title: "Se7en", year: 1995 },
+  { title: "The Silence of the Lambs", year: 1991 },
+  { title: "It's a Wonderful Life", year: 1946 },
+  { title: "Life Is Beautiful", year: 1997 },
+  { title: "The Usual Suspects", year: 1995 },
+  { title: "Léon: The Professional", year: 1994 },
+  { title: "Spirited Away", year: 2001 },
+  { title: "Saving Private Ryan", year: 1998 },
+  { title: "Once Upon a Time in the West", year: 1968 },
+  { title: "American History X", year: 1998 },
+  { title: "Interstellar", year: 2014 },
+  { title: "Casablanca", year: 1942 },
+  { title: "City Lights", year: 1931 },
+  { title: "Psycho", year: 1960 },
+  { title: "The Green Mile", year: 1999 },
+  { title: "The Intouchables", year: 2011 },
+  { title: "Modern Times", year: 1936 },
+  { title: "Raiders of the Lost Ark", year: 1981 },
+  { title: "Rear Window", year: 1954 },
+  { title: "The Pianist", year: 2002 },
+  { title: "The Departed", year: 2006 },
+  { title: "Terminator 2: Judgment Day", year: 1991 },
+  { title: "Back to the Future", year: 1985 },
+  { title: "Whiplash", year: 2014 },
+  { title: "Gladiator", year: 2000 },
+  { title: "Memento", year: 2000 },
+  { title: "The Prestige", year: 2006 },
+  { title: "The Lion King", year: 1994 },
+  { title: "Apocalypse Now", year: 1979 },
+  { title: "Alien", year: 1979 },
+  { title: "Sunset Boulevard", year: 1950 },
+  {
+    title:
+      "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
+    year: 1964,
+  },
+  { title: "The Great Dictator", year: 1940 },
+  { title: "Cinema Paradiso", year: 1988 },
+  { title: "The Lives of Others", year: 2006 },
+  { title: "Grave of the Fireflies", year: 1988 },
+  { title: "Paths of Glory", year: 1957 },
+  { title: "Django Unchained", year: 2012 },
+  { title: "The Shining", year: 1980 },
+  { title: "WALL·E", year: 2008 },
+  { title: "American Beauty", year: 1999 },
+  { title: "The Dark Knight Rises", year: 2012 },
+  { title: "Princess Mononoke", year: 1997 },
+  { title: "Aliens", year: 1986 },
+  { title: "Oldboy", year: 2003 },
+  { title: "Once Upon a Time in America", year: 1984 },
+  { title: "Witness for the Prosecution", year: 1957 },
+  { title: "Das Boot", year: 1981 },
+  { title: "Citizen Kane", year: 1941 },
+  { title: "North by Northwest", year: 1959 },
+  { title: "Vertigo", year: 1958 },
+  {
+    title: "Star Wars: Episode VI - Return of the Jedi",
+    year: 1983,
+  },
+  { title: "Reservoir Dogs", year: 1992 },
+  { title: "Braveheart", year: 1995 },
+  { title: "M", year: 1931 },
+  { title: "Requiem for a Dream", year: 2000 },
+  { title: "Amélie", year: 2001 },
+  { title: "A Clockwork Orange", year: 1971 },
+  { title: "Like Stars on Earth", year: 2007 },
+  { title: "Taxi Driver", year: 1976 },
+  { title: "Lawrence of Arabia", year: 1962 },
+  { title: "Double Indemnity", year: 1944 },
+  {
+    title: "Eternal Sunshine of the Spotless Mind",
+    year: 2004,
+  },
+  { title: "Amadeus", year: 1984 },
+  { title: "To Kill a Mockingbird", year: 1962 },
+  { title: "Toy Story 3", year: 2010 },
+  { title: "Logan", year: 2017 },
+  { title: "Full Metal Jacket", year: 1987 },
+  { title: "Dangal", year: 2016 },
+  { title: "The Sting", year: 1973 },
+  { title: "2001: A Space Odyssey", year: 1968 },
+  { title: "Singin' in the Rain", year: 1952 },
+  { title: "Toy Story", year: 1995 },
+  { title: "Bicycle Thieves", year: 1948 },
+  { title: "The Kid", year: 1921 },
+  { title: "Inglourious Basterds", year: 2009 },
+  { title: "Snatch", year: 2000 },
+  { title: "3 Idiots", year: 2009 },
+  { title: "Monty Python and the Holy Grail", year: 1975 },
+];

@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import { format } from 'date-fns'
-import { ColumnFilter } from './ColumnFilter'
+//import { ColumnFilter } from './ColumnFilter'
 
-
-export const ITEM_COLUMNS = [
+export const PRODUCT_COLUMNS = [
   {
     Header: "ID ",
     Footer: "ID",
@@ -15,17 +14,30 @@ export const ITEM_COLUMNS = [
     Footer: "Název",
     accessor: "name",
     Cell: ({ row }) => (
-      <Link to={`/material/${row.original.id}`}>{row.original.name}</Link>
+      <Link to={`/product_detail/${row.original.id}`}>{row.original.name}</Link>
     ),
   },
   {
     Header: "Typ ",
     Footer: "Typ",
-    accessor: "type.name",
+    accessor: "product_type.name",
   },
   {
-    Header: "Cena ",
-    Footer: "Cena",
+    Header: "Obsah ",
+    Footer: "Obsah",
+    accessor: "items.name",
+  },
+  {
+    Header: "Prod.cena ",
+    Footer: "Prod.cena",
+    accessor: "price",
+    Cell: ({ row }) => {
+      return `${row.original.price} Kč`;
+    },
+  },
+  {
+    Header: "Náklady ",
+    Footer: "Náklady",
     accessor: "costs",
     Cell: ({ row }) => {
       return `${row.original.costs} Kč`;
@@ -34,24 +46,32 @@ export const ITEM_COLUMNS = [
   {
     Header: "Skladem ",
     Footer: "Skladem",
-    accessor: "quantity_of_material",
+    accessor: "stocked",
     Cell: ({ row }) => {
-      return `${row.original.quantity_of_material} ${row.original.unit}`;
+      return `${row.original.stocked} ks`;
     },
   },
   {
-    Header: "Dodavatel ",
-    Footer: "Dodavatel",
-    accessor: "supplier",
+    Header: "Prodáno ",
+    Footer: "Prodáno",
+    accessor: "sold",
+    Cell: ({ row }) => {
+      return `${row.original.sold} ks`;
+    },
   },
   {
-    Header: "Odkaz ",
-    Footer: "Odkaz",
-    accessor: "link",
-    //Cell: ({ row }) => <a href="row.original.link">{row.original.link}</a>,
+    Header: "J&P ",
+    Footer: "J&P",
+    accessor: "brand",
+    onClick: () => {
+      alert("click!");
+    },
+    Cell: (props) => {
+      return props.value === true ? "J&P" : "";
+    },
   },
   // {
-  //   Header: "Poznámka ",
+  //   Header: "Poznámka ",{open ? "yes" : "no"}
   //   Footer: "Poznámka",
   //   accessor: "note",
   //   Filter: ColumnFilter,

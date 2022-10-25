@@ -3,22 +3,16 @@ import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import { useDispatch } from "react-redux";
+import { getMaterial } from "../../Store/Features/Material/materialSlice";
+import { getStorage } from "../../Store/Features/Material/storageSlice";
+import { getRemoval } from "../../Store/Features/Material/removalSlice";
+import { getProduct } from "../../Store/Features/Products/productSlice";
+import { getTransaction } from "../../Store/Features/Products/transactionSlice";
 
 export default function DeleteColumns(props) {
 
-    const [material, setMaterial] = useState([]);
-
-    useEffect(() => {
-      getMaterial();
-    }, [material]);
-
-    const getMaterial = () => {
-      Axios.get("/api/list_items/").then((res) => {
-        setMaterial(res.data);
-        // console.log("Data načtena");
-        // console.log("res.data", res.data);
-      });
-    };
+    const dispatch = useDispatch();
 
   const itemDelete = (id, type, e) => {
     e.preventDefault();
@@ -27,7 +21,7 @@ export default function DeleteColumns(props) {
     {Axios.delete(`/api/item_delete/${id}`)
     .then(() => {
       console.log("Item Deleted!");
-      getMaterial();
+      dispatch(getMaterial());
       navigate("/material");
     })
     .catch((err) => console.log(err));
@@ -36,21 +30,37 @@ export default function DeleteColumns(props) {
   {Axios.delete(`/api/storage_delete/${id}`)
     .then(() => {
       console.log("Storage Deleted!");
-      //getMaterial();
+      dispatch(getStorage());
       navigate("/stock");
     })
     .catch((err) => console.log(err))}
-  else if (props.typeTable === "removal")
-  {Axios.delete(`/api/removal_delete/${id}`)
-    .then(() => {
-      console.log("Removal Deleted!");
-      //getMaterial();
-      navigate("/stock");
-    })
-    .catch((err) => console.log(err));}
-  else {
-        console.log("nepodporovaný typ tabulky");
-      }
+  else if (props.typeTable === "removal") {
+    Axios.delete(`/api/removal_delete/${id}`)
+      .then(() => {
+        console.log("Removal Deleted!");
+        dispatch(getRemoval());
+        navigate("/stock");
+      })
+      .catch((err) => console.log(err));
+  } else if (props.typeTable === "product") {
+    Axios.delete(`/api/product_delete/${id}`)
+      .then(() => {
+        console.log("Product Deleted!");
+        dispatch(getProduct());
+        navigate("/product");
+      })
+      .catch((err) => console.log(err));
+  } else if (props.typeTable === "transaction") {
+    Axios.delete(`/api/transaction_delete/${id}`)
+      .then(() => {
+        console.log("Transaction Deleted!");
+        dispatch(getTransaction());
+        navigate("/transaction");
+      })
+      .catch((err) => console.log(err));
+  } else {
+    console.log("nepodporovaný typ tabulky");
+  }
 };
 
         const navigate = useNavigate();

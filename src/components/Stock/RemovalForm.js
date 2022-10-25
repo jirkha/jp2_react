@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
@@ -7,6 +7,9 @@ import TextField from "../Global/Textfield";
 import DateTimePicker from "../Global/DateTimePicker";
 
 import ItemWrapper from "../Global/Select/ItemWrapper";
+import { useDispatch, useSelector } from "react-redux";
+import { getRemoval } from "../Store/Features/Material/removalSlice";
+import { getMaterial } from "../Store/Features/Material/materialSlice";
 
 import {
   Typography,
@@ -17,16 +20,12 @@ import {
 } from "@mui/material";
 
 const RemovalForm = () => {
-  const [item, setItem] = useState("");
+  const dispatch = useDispatch();
+  const item = useSelector((state) => state.material.data);
 
-  useEffect(() => {
-    Axios.get("/api/items/")
-      .then((res) => {
-        console.log("Items: ", res.data);
-        setItem(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+useEffect(() => {
+  dispatch(getMaterial());
+}, []);
 
   const validationSchema = Yup.object({
     day_of_removal: "",
@@ -61,6 +60,7 @@ const RemovalForm = () => {
       .then((res) => {
         console.log("Adding Removal: ", res);
         console.log("item: ", res.day_of_removal);
+        dispatch(getRemoval());
         //navigate("/material");
       })
       .catch((err) => console.log(err));
@@ -70,7 +70,8 @@ const RemovalForm = () => {
   // pak přiřadí "data", tedy "id" z načteného API seznamu Items příslučnému "item"
   // nakonec u nalezeného item zobrazí atribut "unit", tedy jednotku přiřazenou danému item
   function showUnit(data) {
-    // console.log("doIt:",data);
+    // console.log("item_removal:", item);
+    // console.log("data_removal:", data);
     var filtered = Object.fromEntries(
       Object.entries(item).filter(([k, v]) => v.id === data)
     );

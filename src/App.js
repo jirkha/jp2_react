@@ -15,11 +15,15 @@ import StockPage from "./pages/StockPage";
 import UpdateMaterialPage from "./pages/UpdateMaterialPage";
 import TestPage_old from "./pages/TestPage_old";
 import {TestPage} from "./pages/TestPage";
+import ListProductPage from './pages/ListProductPage'
+import ProductDetailPage from "./pages/ProductDetailPage";
+import UpdateProductPage from "./pages/UpdateProductPage";
 
 import NavbarJP from "./components/Navbar/Navbar";
 import AddItemForm from "./components/Material/AddItemForm";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
+import ListTransactionPage from "./pages/ListTransactionPage";
 
 
 function App() {
@@ -44,6 +48,19 @@ function App() {
               element={<MaterialPage />}
             ></Route>
             <Route path="/stock" element={<StockPage />}></Route>
+            <Route path="/product" element={<ListProductPage />}></Route>
+            <Route
+              path="/product_detail/:productId"
+              element={<ProductDetailPage />}
+            ></Route>
+            <Route
+              path="/edit_product/:productId"
+              element={<UpdateProductPage />}
+            ></Route>
+            <Route
+              path="/transaction"
+              element={<ListTransactionPage />}
+            ></Route>
           </Routes>
         </Container>
         {/* </main> */}

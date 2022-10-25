@@ -12,9 +12,9 @@ const ItemTypesWrapper = ({ name, options, ...otherProps }) => {
   const handleChange = (evt) => {
     const { value } = evt.target;
     // console.log("evt", evt);
-    // console.log("value", value);
-    // console.log("name", name);
-    // console.log("options", options);
+    console.log("value", value);
+    console.log("name", name);
+    console.log("options", options);
     setFieldValue(name, value);
   };
 
