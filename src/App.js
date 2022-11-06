@@ -18,6 +18,7 @@ import {TestPage} from "./pages/TestPage";
 import ListProductPage from './pages/ListProductPage'
 import ProductDetailPage from "./pages/ProductDetailPage";
 import UpdateProductPage from "./pages/UpdateProductPage";
+import SalesStatisticPage from "./pages/SalesStatisticPage";
 
 import NavbarJP from "./components/Navbar/Navbar";
 import AddItemForm from "./components/Material/AddItemForm";
@@ -60,6 +61,10 @@ function App() {
             <Route
               path="/transaction"
               element={<ListTransactionPage />}
+            ></Route>
+            <Route
+              path="/sales_statistic"
+              element={<SalesStatisticPage />}
             ></Route>
           </Routes>
         </Container>

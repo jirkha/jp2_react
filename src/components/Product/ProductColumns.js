@@ -22,11 +22,11 @@ export const PRODUCT_COLUMNS = [
     Footer: "Typ",
     accessor: "product_type.name",
   },
-  {
-    Header: "Obsah ",
-    Footer: "Obsah",
-    accessor: "items.name",
-  },
+  // {
+  //   Header: "Obsah ",
+  //   Footer: "Obsah",
+  //   accessor: "items.name",
+  // },
   {
     Header: "Prod.cena ",
     Footer: "Prod.cena",
@@ -41,6 +41,14 @@ export const PRODUCT_COLUMNS = [
     accessor: "costs",
     Cell: ({ row }) => {
       return `${row.original.costs} Kč`;
+    },
+  },
+  {
+    Header: "Vyrobeno ",
+    Footer: "Vyrobeno",
+    accessor: "made",
+    Cell: ({ row }) => {
+      return `${row.original.made} ks`;
     },
   },
   {

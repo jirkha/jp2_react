@@ -92,6 +92,7 @@ const navigationLinks = [
   { name: "Sklad", href: "/stock" },
   { name: "Produkty", href: "/product" },
   { name: "Transakce", href: "/transaction" },
+  { name: "Statistika", href: "/sales_statistic" },
 ];
 
 export default function NavbarJP() {
@@ -109,7 +110,7 @@ export default function NavbarJP() {
             aria-label="Logo"
             sx={{ mr: 2 }}
           >
-            <Link to="/">
+            <Link href="/">
               <img src={logo} width="140" height="35" alt="Logo" />
             </Link>
           </IconButton>

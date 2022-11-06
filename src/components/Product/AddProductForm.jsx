@@ -37,7 +37,7 @@ const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
 useEffect(() => {
   dispatch(getProductType());
   // dispatch(getMaterial());
-  console.log("productType: ",productType);
+  // console.log("productType: ",productType);
   // console.log("material: ",material)
 }, [SelectArrayWrapper]);
 
@@ -46,7 +46,7 @@ useEffect(() => {
     product_type: Yup.string().required("Prosím vyberte typ produktu"),
     //items: Yup.array().min(1).required("Vyberte prosím alespoň jednu položku"),
     price: Yup.number().min(0).max(1000000).required("Prosím zadejte prodejní cenu produktu (minimálně 0 a maximálně 1 000 000 Kč)"),
-    stocked: Yup.number().min(0).max(1000000),
+    made: Yup.number().min(0).max(1000000),
     procedure: Yup.string(),
     brand: Yup.bool(), //JPcandles A/N
     note: Yup.string()
@@ -57,7 +57,7 @@ useEffect(() => {
     product_type: "",
     //items: [],
     price: 0,
-    stocked: 0,
+    made: 0,
     procedure: "",
     brand: true,
     note: ""
@@ -71,7 +71,7 @@ useEffect(() => {
         product_type,
         //items,
         price,
-        stocked,
+        made,
         procedure,
         brand,
         note
@@ -82,7 +82,7 @@ useEffect(() => {
         product_type,
         //items,
         price,
-        stocked,
+        made,
         procedure,
         brand,
         note
@@ -176,10 +176,9 @@ useEffect(() => {
             </Grid>
             <Grid item xs={6}>
                <TextField 
-                id="stocked" 
-                name="stocked" 
+                name="made" 
                 // size="small"
-                label="Naskladněné množství" 
+                label="Vyrobené množství" 
                 InputProps={{
                   endAdornment: <InputAdornment position='end'>ks</InputAdornment>
                 }}

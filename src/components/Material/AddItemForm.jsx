@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Axios from 'axios'
-//import { FormikTextField } from 'formik-material-fields';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import TextField from "../Global/Textfield"
-import ItemTypesWrapper from "../Global/Select/ItemTypesWrapper"
-// import { HashLink as Link } from "react-router-hash-link";
-
-import * as AddButton from './AddButton';
+import SelectArrayWrapper from '../Global/Select/SelectArrayWrapper';
 import SelectWrapper from '../Global/Select/SelectWrapper';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getMaterial } from "../Store/Features/Material/materialSlice";
+import { getMaterialType } from '../Store/Features/Material/materialTypeSlice';
+import AddItemTypeForm from './AddItemTypeForm'
 
 import { 
   Typography,
@@ -24,44 +23,23 @@ import {
   FormControl,
   MenuItem,
   Stack,
+  IconButton,
 } from "@mui/material";
+import { Popup2 } from "../Global/Other/Popup2";
 
 
-const AddItemForm = () => {
+const AddItemForm = (props) => {
   
-// useEffect(() => {
-//   dispatch(getMaterial());
-// }, []);
-
-//const material = useSelector((state) => state.material.data)
-
 const dispatch = useDispatch();
-  // const [itemType, setItemType] = useState([]);
+const materialType = useSelector((state) => state.materialType.data)
+const { setOpenPopup } = props;
+const [openPopup2, setOpenPopup2] = useState(false);
+    
+useEffect(() => {
+  dispatch(getMaterialType());
+}, [SelectArrayWrapper]);
 
-  //   useEffect(() => {
-  //       Axios.get('/api/item_types/')
-  //       .then(res => {
-  //       console.log("MaterialTypes: ", res.data)
-  //       setItemType(res.data)      
-  //       }).catch(err => console.log(err))
-  //   }, [])
-
-  // const [material, setMaterial] = useState([]);
-
-// useEffect(() => {
-//   getMaterial();
-// }, []);
-
-// const getMaterial = () => {
-//   Axios.get("/api/list_items/").then((res) => {
-//     setMaterial(res.data);
-//     console.log("Data načtena");
-//     console.log("res.data", res.data);
-//   });
-// };
-
-
-    const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
+const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
 
   const validationSchema = Yup.object({
     itemType: Yup.string().required("Prosím vyberte typ materiálu"),//.oneOf(itemType),
@@ -106,8 +84,8 @@ const dispatch = useDispatch();
     })
     .then(res => {
         console.log("Adding Item: ", res);
-        console.log("type: ", res.data.type);
         dispatch(getMaterial()); //aktualizuje seznam materiálu
+        dispatch(getMaterialType());
         //navigate('/material')
     }).catch(err => console.log(err))
   }
@@ -129,6 +107,7 @@ const dispatch = useDispatch();
   
 
   return (
+    <>
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
@@ -143,7 +122,7 @@ const dispatch = useDispatch();
         <Box sx={{  flexWrap: "wrap", }}>
         <Grid 
           container 
-          spacing={2}
+          spacing={1}
           // justifyContent="center"
           //direction="column"
           maxWidth="430px"
@@ -162,21 +141,28 @@ const dispatch = useDispatch();
               <TextField id="name" name="name" label="Název" variant="outlined" required />
             </Grid>
             <Grid item xs={10}>
-               <ItemTypesWrapper
+               <SelectArrayWrapper
                 name="itemType"
                 // size="small"
                 label="Typ materiálu ..."
-                //options={productOptions}
+                options={materialType}
                 required
               > 
-                </ItemTypesWrapper>              
+                </SelectArrayWrapper>              
               {/* <Field name="itemType" as="select" className="select">
                 <option value={""}>Vyberte ze seznamu...</option>
                 {productOptions}
               </Field> */}
             </Grid>
             <Grid item xs={2}>
-              <AddButton.AddButton fontSize="large" color="success" link="#itemTypeForm" />              
+              {/* <AddButton.AddButton 
+              fontSize="large" 
+              color="success" 
+              link="#itemTypeForm" 
+              /> */}
+              <Button sx={{height: "55px", maxWidth: "10px"}} variant="outlined" size="inherit" color="primary" onClick={() => setOpenPopup2(true)}>
+                <AddOutlinedIcon />
+              </Button>    
             </Grid>
             <Grid item xs={6}>
               <TextField 
@@ -226,9 +212,7 @@ const dispatch = useDispatch();
                 type="submit" 
                 className="button"
                 variant="contained"
-                //onClick={() => (<Link to="#itemList"></Link>)}
-                // containerElement={<Link to="#itemList" />}
-                // linkButton={true}
+                onClick={() => setOpenPopup(false)}
                 >
                 Přidat
                 </Button> 
@@ -265,11 +249,17 @@ const dispatch = useDispatch();
         
         </Grid>
         </Box>
-      </Form>
-      
+      </Form>      
       )}
-    </Formik>
+    </Formik>    
+  <Popup2 title="Vložení typu materiálu"
+        openPopup2={openPopup2}
+        setOpenPopup2={setOpenPopup2}
+        >
+          <AddItemTypeForm />
     
+  </Popup2>
+  </>
   );
 };
 export default AddItemForm

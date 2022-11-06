@@ -96,7 +96,17 @@ const MaterialPage = () => {
           </Grid>
           <Grid item xs={9}>
             <Typography variant="subtitle1">
-              {material?.m_ser.costs} Kč za ks / jednotku
+              {material?.m_ser.costs} Kč za {material?.m_ser.unit}
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="subtitle1" color="primary">
+              Množství naskladněného materiálu
+            </Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography variant="subtitle1">
+              {material?.m_ser.quantity_of_material} {material?.m_ser.unit}
             </Typography>
           </Grid>
           <Grid item xs={3}>
@@ -126,6 +136,7 @@ const MaterialPage = () => {
           </Grid>
           <Grid item xs={9}>
             <Typography variant="subtitle1">
+              {/* {format(new Date(material?.m_ser.created), "dd.MM.yyyy kk:mm:ss")} */}
               {material?.m_ser.created}
             </Typography>
           </Grid>
@@ -136,6 +147,7 @@ const MaterialPage = () => {
           </Grid>
           <Grid item xs={9} sx={{ mb: 5 }}>
             <Typography variant="subtitle1">
+              {/* {format(new Date(material?.m_ser.updated), "dd.MM.yyyy kk:mm:ss")} */}
               {material?.m_ser.updated}
             </Typography>
           </Grid>

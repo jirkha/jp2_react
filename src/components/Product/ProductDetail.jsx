@@ -1,16 +1,23 @@
-import React from 'react'
+import React, {useState} from 'react'
+import { format } from 'date-fns';
+import {Popup} from "../Global/Other/Popup"
+import EditIcon from '@mui/icons-material/Edit';
 import {
   Container,
   Typography,
   Grid,
+  IconButton,
 } from "@mui/material";
+import UpdateMadeProduct from './UpdateMadeProduct';
 
 
 function ProductDetail(props) {
 
 const product = props.data;
+const [openPopup, setOpenPopup] = useState(false)
 
   return (
+    <>
     <Container>
           <Grid
             container
@@ -69,6 +76,21 @@ const product = props.data;
             </Grid>
             <Grid item xs={3}>
               <Typography variant="subtitle1" color="primary">
+                Vyrobeno
+              </Typography>
+            </Grid>
+            <Grid item xs={7}>
+              <Typography variant="subtitle1">
+                {product?.p_ser.made} ks
+                <IconButton color="primary" 
+                onClick={() => setOpenPopup(true)}
+                >
+                  <EditIcon fontSize="inherit" />
+                </IconButton>
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="subtitle1" color="primary">
                 Skladem
               </Typography>
             </Grid>
@@ -104,6 +126,7 @@ const product = props.data;
             </Grid>
             <Grid item xs={9}>
               <Typography variant="subtitle1">
+                {/* {format(new Date(product?.p_ser.created), 'dd.MM.yyyy kk:mm:ss')} */}
                 {product?.p_ser.created}
               </Typography>
             </Grid>
@@ -114,7 +137,8 @@ const product = props.data;
             </Grid>
             <Grid item xs={9} sx={{ mb: 5 }}>
               <Typography variant="subtitle1">
-                {product?.p_ser.updated}
+                 {/* {format(new Date(product?.p_ser.updated), 'dd.MM.yyyy kk:mm:ss')} */}
+                 {product?.p_ser.updated}
               </Typography>
             </Grid>
           </Grid>
@@ -124,6 +148,14 @@ const product = props.data;
             </Typography>
           </Grid>
         </Container>
+        <Popup
+        title = "Úprava počtu naskladněných výrobků"
+        openPopup = {openPopup}
+        setOpenPopup = {setOpenPopup}
+        >
+          <UpdateMadeProduct id={product?.p_ser.id} getProduct={props.getProduct} setOpenPopup={setOpenPopup} />
+        </Popup>
+        </>
   )
 }
 

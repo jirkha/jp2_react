@@ -12,8 +12,7 @@ useEffect(() => {
 }, []);
 
 const transaction = useSelector((state) => state.transaction.data);
-
-console.log("transaction", transaction);
+const load = useSelector((state) => state.transaction.loading);
 
 const dispatch = useDispatch();
 
@@ -23,7 +22,9 @@ const dispatch = useDispatch();
         <TableGlobal
           columns={TRANSACTION_COLUMNS}
           dataAPI={transaction}
+          loadingState={load}
           type="transaction"
+          name="transakci"
         />
       )}
     </div>

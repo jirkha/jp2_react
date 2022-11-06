@@ -58,7 +58,7 @@ function ProductDetailPage() {
     Axios.delete(`/api/product_delete/${id}`)
       .then(() => {
         console.log("Deleted!");
-        getProduct();
+        dispatch(getProduct());
         navigate("/product");
       })
       .catch((err) => console.log(err));
@@ -102,7 +102,7 @@ function ProductDetailPage() {
 
   const onSubmit = (values) => {
     const { item, quantity } = values;
-    console.log("values: : ", values);
+    //console.log("values: : ", values);
     Axios.patch(`/api/product_item_patch/${productId}`, {
       item,
       quantity,
@@ -143,8 +143,8 @@ function ProductDetailPage() {
         >
           {product?.p_ser.name}
         </Typography>
-        
-        <ProductDetail data={product} /> 
+
+        <ProductDetail data={product} getProduct={getProduct} />
 
         <Stack
           sx={{
@@ -284,7 +284,7 @@ function ProductDetailPage() {
                               <InputAdornment position="end">
                                 {showUnit(values.item)}
                                 {/* načte a zobrazí jednotku dle vybrané "item" ze komponenty ItemWrapper */}
-         </InputAdornment>
+                              </InputAdornment>
                             ),
                           }}
                         />

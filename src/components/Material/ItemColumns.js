@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { format } from 'date-fns'
+import EditIcon from "@mui/icons-material/Edit";
 import { ColumnFilter } from './ColumnFilter'
 
 
@@ -16,6 +17,19 @@ export const ITEM_COLUMNS = [
     accessor: "name",
     Cell: ({ row }) => (
       <Link to={`/material/${row.original.id}`}>{row.original.name}</Link>
+    ),
+  },
+  {
+    Header: "",
+    Footer: "",
+    disableFilters: true,
+    accessor: "type.id",
+    Cell: ({ row }) => (
+      <Link to={`/edit_material/${row.original.id}`}>
+        <EditIcon
+          color="warning"
+        />
+      </Link>
     ),
   },
   {

@@ -34,49 +34,21 @@ import {
   tableCellClasses,
   styled,
   Grid,
+  CircularProgress,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { CenterFocusStrong } from "@mui/icons-material";
 
 
 function TableGlobal(props) {
   
-  // const [material, setMaterial] = useState([]);
-
-  // useEffect(() => {
-  //   getMaterial();
-  // }, []);
-
-  // const getMaterial = () => {
-  //   Axios.get("/api/list_items/").then((res) => {
-  //     setMaterial(res.data);
-  //     console.log("Data načtena");
-  //     console.log("res.data", res.data);
-  //   });
-  // };
-  
-
-  // const navigate = useNavigate();
-
-  // const postDelete = (id, e, typeTab) => {
-  //   e.preventDefault();
-  //   if (typeTab === "item") {
-  //     Axios.delete(`/api/item_delete/${id}`)
-  //     .then(() => {
-  //       console.log("Deleted!");
-  //       getMaterial();
-  //       navigate("/material");
-  //     })
-  //     .catch((err) => console.log(err));}
-  //     else {
-  //       console.log("neznámý typ tabulky")
-  //     }
-  
-    
-  // };
 
   const columns = useMemo(() => props.columns, []);
   // const data = useMemo(() => props.dataAPI);
   const data = props.dataAPI;
+  const loading = props.loadingState;
+  const { setOpenPopup } = props;
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -143,6 +115,16 @@ function TableGlobal(props) {
     },
   }));
 
+
+  //po dobu načítání dat se ukazuje tato komponenta, až poté se načte tabulka
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
@@ -191,111 +173,120 @@ function TableGlobal(props) {
               <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid item xs={6}>
-              <FormControlLabel
-                label=<strong>{"Zobraz vše"}</strong>
-                control={
-                  <CheckboxTable
-                    size="small"
-                    {...getToggleHideAllColumnsProps()}
-                  />
-                }
-              />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            // spacing={{ xs: 1, md: 2 }}
-          >
-            {allColumns.map((column) => (
-              <Grid item xs={6} sm={3} md={3} 
-              key={column.id}>
-                {/* <div key={column.id}> */}
+          <Grid container sx={{ mt: 2, mb: 1 }}>
+            <Grid item xs={12}>
+              <Paper elevation={2}>
                 <FormControlLabel
-                  // value="bottom"
-                  // labelPlacement="bottom"
-                  label={column.Header}
+                  label=<strong>{"Zobraz vše"}</strong>
                   control={
                     <CheckboxTable
                       size="small"
-                      {...column.getToggleHiddenProps()}
+                      {...getToggleHideAllColumnsProps()}
                     />
                   }
-                  //label="bottom"
                 />
-                {/* </div> */}
+              </Paper>
+            </Grid>
+          </Grid>
+          <Grid container spacing={{ xs: 1, md: 1 }}>
+            {allColumns.map((column) => (
+              <Grid item xs={6} sm={3} md={3} key={column.id}>
+                {/* <div key={column.id}> */}
+                <Paper elevation={2}>
+                  <FormControlLabel
+                    label={column.Header}
+                    control={
+                      <CheckboxTable
+                        size="small"
+                        {...column.getToggleHiddenProps()}
+                      />
+                    }
+                  />
+                </Paper>
               </Grid>
             ))}
           </Grid>
         </Grid>
       </Box>
 
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: "700px", borderRadius: "15px" }}
-      >
-        <Table
-          {...getTableProps()}
-          //aria-label="customized table"
-          size="small"
-          stickyHeader
+      <Paper elevation={2} sx={{ p: "10px", mt: 2 }}>
+        <TableContainer
+          component={Paper}
+          sx={{ maxHeight: "700px", mt: 3, borderRadius: "15px" }}
         >
-          <TableHead>
-            {headerGroups.map((headerGroup) => (
-              <TableRow {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <TableCell
-                    sx={{
-                      backgroundColor: "primary.main",
-                    }}
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                  >
-                    {column.render("Header")} {/* název sloupce */}
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <BsFillArrowDownSquareFill />
-                        ) : (
-                          <BsFillArrowUpSquareFill />
-                        )
-                      ) : (
-                        <BsSortDown />
-                      )}
-                    </span>
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableHead>
-          <TableBody {...getTableBodyProps()}>
-            {(page.length > 0 &&
-              page.map((row) => {
-                prepareRow(row);
-                return (
-                  <StyledTableRow {...row.getRowProps()} hover>
-                    {row.cells.map((cell) => {
-                      return (
-                        <StyledTableCell {...cell.getCellProps()}>
-                          {cell.render("Cell")}
-                        </StyledTableCell>
-                      );
-                    })}
-                  </StyledTableRow>
-                );
-              })) || (
-              <StyledTableRow>
-                <Typography sx={{ flexWrap: "false" }}>
-                  Žádná položka k zobrazení
-                </Typography>
-              </StyledTableRow>
-            )}
-          </TableBody>
-          {/* tfoot slouží k zobrazení legendy tabulky po tabulkou - je deaktivováno */}
-          {/* <tfoot>
+          <Table
+            {...getTableProps()}
+            //aria-label="customized table"
+            size="small"
+            stickyHeader
+          >
+            <TableHead>
+              {headerGroups.map((headerGroup) => (
+                <TableRow {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map(
+                    (column) => (
+                      //console.log("column", column),
+                      (
+                        <TableCell
+                          sx={{
+                            backgroundColor: "primary.main",
+                          }}
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps()
+                          )}
+                        >
+                          {" "}
+                          {column.render("Header")} {/* název sloupce */}
+                          <>
+                            {column.Header !== "" && (
+                              <Typography>
+                                {column.isSorted ? (
+                                  column.isSortedDesc ? (
+                                    <BsFillArrowDownSquareFill />
+                                  ) : (
+                                    <BsFillArrowUpSquareFill />
+                                  )
+                                ) : (
+                                  <BsSortDown />
+                                )}
+                              </Typography>
+                            )}
+                          </>
+                          <div>
+                            {column.canFilter ? column.render("Filter") : null}
+                          </div>
+                        </TableCell>
+                      )
+                    )
+                  )}
+                </TableRow>
+              ))}
+            </TableHead>
+            <TableBody {...getTableBodyProps()}>
+              {(page.length > 0 &&
+                page.map((row) => {
+                  prepareRow(row);
+                  return (
+                    <StyledTableRow {...row.getRowProps()} hover>
+                      {row.cells.map((cell) => {
+                        return (
+                          <StyledTableCell {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </StyledTableCell>
+                        );
+                      })}
+                    </StyledTableRow>
+                  );
+                })) || (
+                <StyledTableRow>
+                  <Typography sx={{ flexWrap: "false" }}>
+                    Žádná položka k zobrazení
+                  </Typography>
+                </StyledTableRow>
+              )}
+            </TableBody>
+            {/* tfoot slouží k zobrazení legendy tabulky po tabulkou - je deaktivováno */}
+            {/* <tfoot>
         {footerGroups.map((footerGroop) => (
           <tr {...footerGroop.getFooterGroupProps()}>
             {footerGroop.headers.map((column) => (
@@ -304,54 +295,80 @@ function TableGlobal(props) {
           </tr>
         ))}
       </tfoot> */}
-        </Table>
-      </TableContainer>
+          </Table>
+        </TableContainer>
 
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={4}
-        justifyContent="space-between"
-      >
-        <ButtonGroup
-          variant="contained"
-          //size="small"
-          aria-label="outlined primary button group"
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={4}
+          justifyContent="space-between"
         >
-          <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {" << "}
-          </Button>
-          <Button onClick={() => nextPage()} disabled={!canNextPage}>
-            {" "}
-            {" >> "}
-          </Button>
-        </ButtonGroup>
-        <div>
-          <span>
-            Strana{" "}
-            <strong>
-              {pageIndex + 1} z {pageOptions.length}
-            </strong>
-          </span>
-          <select
-            value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
+          <ButtonGroup
+            variant="contained"
+            //size="small"
+            aria-label="outlined primary button group"
           >
-            {[10, 20, 30, 50, 100].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Stran {pageSize}
-              </option>
-            ))}
-          </select>
-        </div>
-        <DeleteColumns
-          disabledRow={selectedFlatRows.length < 1}
-          typeTable={props.type}
-          //rows={row.original.id}
-          //key={e}
-          selectedRows={selectedFlatRows}
-        />
-        {/* <Button
+            <Button
+              size="small"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            >
+              {" << "}
+            </Button>
+            <Button
+              size="small"
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            >
+              {" "}
+              {" >> "}
+            </Button>
+          </ButtonGroup>
+          <Stack
+            direction={{ sm: "column", md: "row" }}
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography>
+              Strana{" "}
+              <strong>
+                {pageIndex + 1} z {pageOptions.length}
+              </strong>
+            </Typography>
+            <Select
+              value={pageSize}
+              size="small"
+              onChange={(e) => setPageSize(Number(e.target.value))}
+            >
+              {[5, 10, 20, 30, 50, 100].map((pageSize) => (
+                <MenuItem key={pageSize} value={pageSize}>
+                  Položek {pageSize}
+                </MenuItem>
+              ))}
+            </Select>
+          </Stack>
+          <Stack
+            direction={{ sm: "column", md: "row" }}
+            spacing={{ xs: 1, sm: 2, md: 6 }}
+          >
+            <DeleteColumns
+              disabledRow={selectedFlatRows.length < 1}
+              typeTable={props.type}
+              //rows={row.original.id}
+              //key={e}
+              selectedRows={selectedFlatRows}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setOpenPopup(true)}
+            >
+              Přidat {props.name}
+            </Button>
+          </Stack>
+
+          {/* <Button
           type="delete"
           size="small"
           variant="outlined"
@@ -371,7 +388,8 @@ function TableGlobal(props) {
         >
           Vymazat
         </Button> */}
-      </Stack>
+        </Stack>
+      </Paper>
       {/* <pre>
         <code>
           {JSON.stringify(

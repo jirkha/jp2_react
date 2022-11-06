@@ -19,6 +19,7 @@ import {
   Button,
   InputAdornment,
 } from "@mui/material";
+import { ShowValue } from "../Global/Utils/showValue";
 
 
 const StorageForm = () => {
@@ -68,25 +69,6 @@ useEffect(() => {
       .catch((err) => console.log(err));
   };
 
-  // fce "showUnit" načte "data" příslušného "item", který uživatel zvolil selectem "ItemWrapper"
-  // pak přiřadí "data", tedy "id" z načteného API seznamu Items příslučnému "item"
-  // nakonec u nalezeného item zobrazí atribut "unit", tedy jednotku přiřazenou danému item
-  function showUnit(data) {
-    // console.log("item_storage:",item);
-    // console.log("data_storage:", data);
-    var filtered = Object.fromEntries(
-      Object.entries(item).filter(([k, v]) => v.id === data)
-    );
-    // console.log(
-    //   "filtered",(filtered)
-    // );
-    var filteredUnit = Object.keys(filtered).map((key) => (
-      <>{filtered[key].unit} </>
-    ));
-    console.log("filteredUnit", filteredUnit);
-    return <Typography>{filteredUnit}</Typography>;
-  }
-
   return (
     <>
       <Formik
@@ -100,7 +82,7 @@ useEffect(() => {
         }}
       >
         {({ isValid, values }) => (
-          console.log("values", values),
+          //console.log("values", values),
           (
             <Form>
               <Box sx={{ flexWrap: "wrap" }}>
@@ -155,7 +137,7 @@ useEffect(() => {
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            {showUnit(values.item)}
+                            <ShowValue object={item} data={values.item} value="unit" />
                             {/* načte a zobrazí jednotku dle vybrané "item" ze komponenty ItemWrapper */}
                           </InputAdornment>
                         ),

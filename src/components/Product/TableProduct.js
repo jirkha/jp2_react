@@ -11,6 +11,7 @@ useEffect(() => {
 }, []);
 
 const product = useSelector((state) => state.product.data);
+const load = useSelector((state) => state.product.loading);
 
 console.log("products",product)
 
@@ -22,7 +23,9 @@ const dispatch = useDispatch();
         <TableGlobal
           columns={PRODUCT_COLUMNS}
           dataAPI={product}
+          loadingState={load}
           type="product"
+          name="produkt"
         />
       )}
     </div>

@@ -33,14 +33,11 @@ export const TRANSACTION_COLUMNS = [
     accessor: "product.name",
   },
   {
-    Header: "Nacenění ",
-    Footer: "Nacenění",
+    Header: "SLEVA ",
+    Footer: "SLEVA",
     accessor: "discount_increase",
-    onClick: () => {
-      alert("click!");
-    },
     Cell: (props) => {
-      return props.value === true ? "J&P" : "";
+      return props.value === "-" ? "SLEVA" : "";
     },
   },
   {
@@ -54,9 +51,9 @@ export const TRANSACTION_COLUMNS = [
   {
     Header: "Tržba ",
     Footer: "Tržba",
-    accessor: "total_price",
+    accessor: "sum",
     Cell: ({ row }) => {
-      return `${row.original.price} Kč`;
+      return `${row.original.sum} Kč`;
     },
   },
   {

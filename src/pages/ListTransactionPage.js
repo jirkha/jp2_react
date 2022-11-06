@@ -32,69 +32,22 @@ function ListTransactionPage() {
         </Typography>
         <TableTransaction />
       </Container>
-      <Container>
-        <AddTransactionForm />
-      </Container>
-{/* 
-      <Container component="section" id="productForm">
-        <Typography
-          variant="h2"
-          sx={{ mt: 5 }} //mezera nad textem
-          color="primary"
-          align="center" //zarovná doprostřed
-          gutterBottom //vytvoří mezeru pod textem
-        >
-          &#9782; Přidat produkt
-        </Typography>
-        <Stack sx={{ justifyContent: "center" }} direction="row">
-          <AddProductForm />
-        </Stack>
-      </Container>
 
-      <Container component="section" id="productTypeForm">
+      <Container component="section" id="transactionForm">
         <Typography
-          sx={{ mt: 5 }} //mezera nad textem
           variant="h2"
+          sx={{ mt: 5 }} //mezera nad textem
           color="primary"
           align="center" //zarovná doprostřed
           gutterBottom //vytvoří mezeru pod textem
         >
-          &#9782; Přidat typ produktu
+          &#9782; Přidat transakci
         </Typography>
         <Stack sx={{ justifyContent: "center" }} direction="row">
-          <AddProductTypeForm />
+          <AddTransactionForm />
         </Stack>
       </Container>
-
-      <Container component="section" id="saleForm">
-        <Typography
-          sx={{ mt: 5 }} //mezera nad textem
-          variant="h2"
-          color="primary"
-          align="center" //zarovná doprostřed
-          gutterBottom //vytvoří mezeru pod textem
-        >
-          &#9782; Přidat prodejní kanál
-        </Typography>
-        <Stack sx={{ justifyContent: "center" }} direction="row">
-          <AddSaleForm />
-        </Stack>
-      </Container>
-
-      <Container component="section" id="saleTypeForm">
-        <Typography
-          sx={{ mt: 5 }} //mezera nad textem
-          variant="h2"
-          color="primary"
-          align="center" //zarovná doprostřed
-          gutterBottom //vytvoří mezeru pod textem
-        >
-          &#9782; Přidat typ prodejního kanálu
-        </Typography>
-        <Stack sx={{ justifyContent: "center" }} direction="row">
-          <AddSaleTypeForm />
-        </Stack>
-      </Container> */}
+    
     </div>
   );
 }

@@ -12,6 +12,7 @@ function TableRemoval() {
 
 const removal_pre = useSelector((state) => state.removal.data);
 const removal = useMemo(() => removal_pre)
+const load = useSelector((state) => state.removal.loading);
 
 const dispatch = useDispatch();
 
@@ -21,7 +22,9 @@ const dispatch = useDispatch();
         <TableGlobal
           columns={REMOVAL_COLUMNS}
           dataAPI={removal}
+          loadingState={load}
           type="removal"
+          name="vyskladnění"
         />
       )}
     </div>
