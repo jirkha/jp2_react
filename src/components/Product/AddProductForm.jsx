@@ -1,18 +1,18 @@
-import React, {useState, useEffect, useField} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import Axios from 'axios'
 import TextField from "../Global/Textfield"
 import Notification from '../Global/Notifications/Notification';
+import { Popup2 } from "../Global/Other/Popup2";
 
-import * as AddButton from '../Material/AddButton';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import SelectArrayWrapper from '../Global/Select/SelectArrayWrapper';
-import SelectMultipleWrapper from '../Global/Select/SelectMultipleWrapper';
 import { useDispatch, useSelector } from "react-redux";
 import { getProductType } from '../Store/Features/Products/productTypeSlice';
 import { getProduct } from '../Store/Features/Products/productSlice';
-// import { getMaterial } from '../Store/Features/Material/materialSlice';
+import AddProductTypeForm from "./AddProductTypeForm"
 
 import { 
   Typography,
@@ -26,20 +26,23 @@ import {
 
 
 
-const AddProductForm = () => {
+const AddProductForm = (props) => {
 
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-const productType = useSelector((state) => state.productType.data)
-const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
-// const material = useSelector((state) => state.material.data)
+  const productType = useSelector((state) => state.productType.data)
+  const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
+  const editedProduct = props.editedProduct
+  const { setOpenPopup } = props;
+  const [openPopup2, setOpenPopup2] = useState(false);
 
-useEffect(() => {
-  dispatch(getProductType());
-  // dispatch(getMaterial());
-  // console.log("productType: ",productType);
-  // console.log("material: ",material)
-}, [SelectArrayWrapper]);
+  useEffect(() => {
+    dispatch(getProductType());
+  }, [SelectArrayWrapper]);
+
+  const handleClose = () => {
+    setOpenPopup2(false);
+  };
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Prosím zadejte název produktu"),//.oneOf(itemType),
@@ -53,14 +56,14 @@ useEffect(() => {
   });
 
   const initialValues = {
-    name: "",
-    product_type: "",
-    //items: [],
-    price: 0,
-    made: 0,
-    procedure: "",
-    brand: true,
-    note: ""
+    name: editedProduct?.name ?? "",
+    product_type: editedProduct?.product_type.id ?? "",
+    items: [],
+    price: editedProduct?.price ?? 0,
+    made: editedProduct?.made ?? 0,
+    procedure: editedProduct?.procedure ?? "",
+    brand: editedProduct?.brand ?? true,
+    note: editedProduct?.note ?? ""
   };
 
   const navigate = useNavigate();
@@ -76,7 +79,32 @@ useEffect(() => {
         brand,
         note
     } = values;
-    console.log("values: : ", values);
+    //console.log("values: : ", values);
+
+    if (editedProduct) {
+    Axios.put(`/api/product_update/${editedProduct.id}/`, {
+      name,
+        product_type,
+        //items,
+        price,
+        made,
+        procedure,
+        brand,
+        note
+    })
+    .then(res => {
+        console.log("Updating Product: ", res);
+        dispatch(getProduct()); //aktualizuje seznam produktů
+        navigate(`/product_detail/${res.data.id}`) //přesměruje na detail vytvořeného produktu
+        setNotify({
+          isOpen: true,
+          message: 'V případě potřeby upravte materiál obsažený v produktu níže na této stránce',
+          type: 'info'
+        })
+    }).catch(err => console.log(err))
+  }
+
+  else {
     Axios.post('/api/product_add/', {
         name,
         product_type,
@@ -98,6 +126,7 @@ useEffect(() => {
           type: 'info'
         })
     }).catch(err => console.log(err))
+  }
 }
 
 //   const productOptions = itemType.map((opt, index) => (<option key={index} value={opt.id}>
@@ -123,7 +152,7 @@ useEffect(() => {
         <Box sx={{  flexWrap: "wrap", }}>
         <Grid 
           container 
-          spacing={2}
+          spacing={1}
           // justifyContent="center"
           //direction="column"
           maxWidth="430px"
@@ -143,14 +172,16 @@ useEffect(() => {
                <SelectArrayWrapper
                 name="product_type"
                 // size="small"
-                label="Typ produktu ..."
+                label="Druh produktu ..."
                 options={productType}
                 required
               > 
                 </SelectArrayWrapper>              
             </Grid>
             <Grid item xs={2}>
-              <AddButton.AddButton fontSize="large" color="success" link="#productTypeForm" />              
+              <Button sx={{height: "55px", maxWidth: "10px"}} variant="outlined" size="inherit" color="primary" onClick={() => setOpenPopup2(true)}>
+                <AddOutlinedIcon />
+              </Button> 
             </Grid>
              
             <Grid item xs={12}>
@@ -204,8 +235,9 @@ useEffect(() => {
                 type="submit" 
                 className="button"
                 variant="contained"
+                onClick={() => isValid && setOpenPopup(false)}
                 >
-                Přidat
+                {editedProduct ? "Změnit" : "Přidat"}
                 </Button>            
             </Grid>
              <Grid item xs={9}>
@@ -223,6 +255,12 @@ useEffect(() => {
       
       )}
     </Formik>
+    <Popup2 title="Vložení druhu produktu"
+      openPopup2={openPopup2}
+      setOpenPopup2={setOpenPopup2}
+      >
+        <AddProductTypeForm handleClose={handleClose} />
+    </Popup2>
     <Notification
       notify={notify}
       setNotify={setNotify}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMaterialType } from "../Store/Features/Material/materialTypeSlice";
+import { getProductType } from "../Store/Features/Products/productTypeSlice";
 import Axios from "axios";
 import { useConfirm } from "material-ui-confirm";
 
@@ -8,60 +8,60 @@ import BasicCard from '../Global/Other/BasicCard';
 
 import { Button, Container, Grid, CardActionArea, Typography } from "@mui/material";
 import { Popup2 } from "../Global/Other/Popup2";
-import AddItemTypeForm from "./AddItemTypeForm";
+import AddProductTypeForm from "./AddProductTypeForm";
 import { Stack } from "@mui/system";
 import Notification from "../Global/Notifications/Notification";
 
-function ItemTypesList() {
+function ProductTypesList() {
 
-    const dispatch = useDispatch();
-    const confirm = useConfirm();
-    const materialType = useSelector((state) => state.materialType.data);
-    const [openPopup2, setOpenPopup2] = useState(false);
-    const [materialTypeObj, setMaterialTypeObj] = useState("")
-    const [notify, setNotify] = useState({
-      isOpen: false,
-      message: "",
-      type: "",
-    });
+  const dispatch = useDispatch();
+  const confirm = useConfirm();
+  const productType = useSelector((state) => state.productType.data);
+  const [openPopup2, setOpenPopup2] = useState(false);
+  const [productTypeObj, setProductTypeObj] = useState("");
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
 
-    useEffect(() => {
-      dispatch(getMaterialType());
-      //console.log("materialType", materialType);
-    }, []);
+  useEffect(() => {
+    dispatch(getProductType());
+    //console.log("materialType", materialType);
+  }, []);
 
-    const editAction = (type) => {
-      console.log("type",type)
-        setMaterialTypeObj(type);
-        setOpenPopup2(true);
-    }
+  const editAction = (type) => {
+    console.log("type", type);
+    setProductTypeObj(type);
+    setOpenPopup2(true);
+  };
 
-    const addAction = () => {
-        setMaterialTypeObj(undefined);
-        setOpenPopup2(true);
-    }
+  const addAction = () => {
+    setProductTypeObj(undefined);
+    setOpenPopup2(true);
+  };
 
-      const handleClose = () => {
-        setOpenPopup2(false);
-      };
+  const handleClose = () => {
+    setOpenPopup2(false);
+  };
 
-    const itemTypeDelete = (type, e) => {
+  const productTypeDelete = (type, e) => {
     e.preventDefault();
     confirm({
-      title: `Opravdu chtete vymazat položku ${type.name}?`,
+      title: `Opravdu chtete vymazat položku ${type.name}? Akce nejde vrátit zpět!`,
       titleProps: { color: "text.primary", fontSize: 20, fontWeight: "light" },
       cancellationButtonProps: { variant: "outlined" },
       confirmationButtonProps: { variant: "outlined" },
     })
       .then(() => {
-        Axios.delete(`/api/itemType_delete/${type.id}`)
+        Axios.delete(`/api/productType_delete/${type.id}`)
           .then(() => {
             console.log("Deleted!");
             //console.log("productId", productId);
-            dispatch(getMaterialType());
+            dispatch(getProductType());
             setNotify({
               isOpen: true,
-              message: `Typ materiálu ${type.name} byl odstraněn`,
+              message: `Druh materiálu ${type.name} byl odstraněn`,
               type: "warning",
             });
           })
@@ -70,13 +70,13 @@ function ItemTypesList() {
             setNotify({
               isOpen: true,
               message:
-                "Není možno odstranit typ materiálu, protože by pravděpodobně došlo k odstranění všech produktů tohoto typu! Typ materiálu lze upravit.",
+                "Není možno odstranit druh produktu, protože by pravděpodobně došlo k odstranění všech produktů tohoto typu! Tento druh produktu lze pouze upravit.",
               type: "error",
             });
           });
       })
       .catch(() => console.log("Deletion cancelled."));
-}
+  };
 
   return (
     <>
@@ -88,48 +88,48 @@ function ItemTypesList() {
             //onClick={(() => setOpenPopup2(true), setMaterialTypeObj(undefined))}
             onClick={addAction}
           >
-            Přidat nový druh materiálu
+            Přidat nový druh produktu
           </Button>
         </Stack>
         <Typography variant="subtitle2">
           Položky seřazeny dle abecedy
         </Typography>
         <Grid container spacing={{ xs: 2, md: 2 }}>
-          {materialType.map((type) => (
+          {productType.map((type) => (
             <Grid item xs={6} sm={5} md={3} lg={2} key={type.id}>
               {/* <Paper elevation={2}> */}
               <BasicCard
-                typeItem="Druh materiálu"
+                typeItem="Druh produktu"
                 type={type} //místo posílání type zabudovat useRef
-                typeCount={type.material_count}
-                delete={itemTypeDelete} //využít useRef, aby se nemuselo id posílat tam a zpět
+                typeCount={type.product_count}
+                delete={productTypeDelete} //využít useRef, aby se nemuselo id posílat tam a zpět
                 edit={editAction}
-                //ref={type}
+                ref={type}
               />
               {/* </Paper> */}
             </Grid>
           ))}
         </Grid>
-        {materialTypeObj ? (
+        {productTypeObj ? (
           <Popup2
-            title={`Editace typu materiálu ${materialTypeObj.name}`}
+            title={`Editace druhu produktu ${productTypeObj.name}`}
             openPopup2={openPopup2}
             setOpenPopup2={setOpenPopup2}
           >
-            <AddItemTypeForm
+            <AddProductTypeForm
               handleClose={handleClose}
-              materialTypeObj={materialTypeObj}
+              productTypeObj={productTypeObj}
             />
           </Popup2>
         ) : (
           <Popup2
-            title="Vložení typu materiálu"
+            title="Vložení nového druhu produktu"
             openPopup2={openPopup2}
             setOpenPopup2={setOpenPopup2}
           >
-            <AddItemTypeForm
+            <AddProductTypeForm
               handleClose={handleClose}
-              materialTypeObj={materialTypeObj}
+              productTypeObj={productTypeObj}
             />
           </Popup2>
         )}
@@ -139,4 +139,4 @@ function ItemTypesList() {
   );
 }
 
-export default ItemTypesList
+export default ProductTypesList;

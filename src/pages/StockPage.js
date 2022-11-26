@@ -10,16 +10,25 @@ function StockPage() {
   return (
     <div>
       <Container component="section" id="storageForm">
+        <Typography
+          variant="h2"
+          sx={{ mt: 3 }} //mezera nad textem
+          color="primary"
+          align="center" //zarovná doprostřed
+          //gutterBottom //vytvoří mezeru pod textem
+        >
+          &#9782; Sklad
+        </Typography>
         <Stack
           justifyContent="space-around" //vzájemná poloha
-          direction={{ xs: "column", lg: "row" }}
+          //direction={{ xs: "column", xl: "row" }}
+          direction="column"
           spacing={{ xs: 1, sm: 2, md: 4 }}
-          sx={{mb:5}} //mezera pod komponentou
-          
+          sx={{ mb: 5 }} //mezera pod komponentou
         >
           <Box>
             <Typography
-              variant="h2"
+              variant="h4"
               sx={{ mt: 3 }} //mezera nad textem
               color="primary"
               align="center" //zarovná doprostřed
@@ -31,7 +40,7 @@ function StockPage() {
           </Box>
           <Box>
             <Typography
-              variant="h2"
+              variant="h4"
               sx={{ mt: 3 }} //mezera nad textem
               color="primary"
               align="center" //zarovná doprostřed
@@ -43,7 +52,7 @@ function StockPage() {
           </Box>
         </Stack>
 
-        <Stack
+        {/* <Stack
           justifyContent={{sm: "center", md: "space-around"}} //vzájemná poloha
           direction={{ sm: "column", md: "row" }}
           spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -74,7 +83,7 @@ function StockPage() {
             </Typography>
             <RemovalForm />
           </Box>
-        </Stack>
+        </Stack> */}
       </Container>
       {/* </section> */}
     </div>

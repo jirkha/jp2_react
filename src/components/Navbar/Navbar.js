@@ -86,10 +86,11 @@ import { Tab } from "@mui/material";
 
 
 const navigationLinks = [
-  { name: "Test1", href: "/testpage" },
-  { name: "Test2", href: "/testpage2" },
+  { name: "T1", href: "/testpage" },
+  { name: "T2", href: "/testpage2" },
   { name: "Materiál", href: "/material" },
   { name: "Sklad", href: "/stock" },
+  { name: "Prodejní kanály", href: "/sale" },
   { name: "Produkty", href: "/product" },
   { name: "Transakce", href: "/transaction" },
   { name: "Statistika", href: "/sales_statistic" },

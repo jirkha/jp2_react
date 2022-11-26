@@ -51,9 +51,9 @@ export const TRANSACTION_COLUMNS = [
   {
     Header: "Tržba ",
     Footer: "Tržba",
-    accessor: "sum",
+    accessor: "sum_sales",
     Cell: ({ row }) => {
-      return `${row.original.sum} Kč`;
+      return `${row.original.sum_sales} Kč`;
     },
   },
   {

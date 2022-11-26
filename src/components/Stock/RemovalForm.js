@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import Axios from "axios";
 import TextField from "../Global/Textfield";
-import DateTimePicker from "../Global/DateTimePicker";
+import DateTimePicker from "../Global/DateTimePicker/DateTimePicker";
 import Notification from "../Global/Notifications/Notification";
 
 import ItemWrapper from "../Global/Select/ItemWrapper";
@@ -21,14 +20,19 @@ import {
 } from "@mui/material";
 import { ShowValue } from "../Global/Utils/showValue";
 
-const RemovalForm = () => {
+const RemovalForm = (props) => {
   const dispatch = useDispatch();
   const item = useSelector((state) => state.material.data);
+  const { setOpenPopup } = props;
   const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
 
-useEffect(() => {
-  dispatch(getMaterial());
-}, []);
+  useEffect(() => {
+    dispatch(getMaterial());
+  }, []);
+
+  const handleClose = () => {
+    setOpenPopup(false);
+  };
 
   const validationSchema = Yup.object({
     day_of_removal: "",
@@ -49,8 +53,6 @@ useEffect(() => {
     note: "",
   };
 
-  const navigate = useNavigate();
-
   const onSubmit = (values) => {
     const { day_of_removal, item, quantity_of_material, note } = values;
     Axios.post("/api/removal_add/", {
@@ -61,9 +63,12 @@ useEffect(() => {
     })
       .then((res) => {
         console.log("Adding Removal: ", res);
-        //console.log("item: ", res.day_of_removal);
+        setNotify({
+          isOpen: true,
+          message: "Vyskladnění bylo úspěšné",
+          type: "success",
+        });
         dispatch(getRemoval());
-        //navigate("/material");
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -187,7 +192,12 @@ useEffect(() => {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button type="submit" className="button" variant="contained">
+                  <Button
+                    type="submit"
+                    className="button"
+                    variant="contained"
+                    onClick={handleClose}
+                  >
                     Přidat
                   </Button>
                 </Grid>

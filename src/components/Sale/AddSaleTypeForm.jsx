@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import Axios from 'axios'
 import TextField from "../Global/Textfield"
-
-import { useDispatch } from "react-redux";
+import Notification from '../Global/Notifications/Notification';
+import { useDispatch, useSelector } from "react-redux";
+import { getSale } from '../Store/Features/Products/saleSlice';
 import { getSaleType } from "../Store/Features/Products/saleTypeSlice";
 
 import { 
@@ -16,16 +17,24 @@ import {
 } from "@mui/material";
 
 
-const AddSaleTypeForm = () => {
+const AddSaleTypeForm = (props) => {
 
   const dispatch = useDispatch();
+  //const saleType = useSelector((state) => state.saleType.data)
+  const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
+  const saleTypeObj = props.saleTypeObj || undefined
+  const { handleClose } = props;
+
+  useEffect(() => {
+    dispatch(getSaleType());
+  }, []);
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Prosím zadejte název")
   });
 
   const initialValues = {
-    name: ""
+    name: saleTypeObj?.name ?? ""
   };
 
   const navigate = useNavigate();
@@ -33,18 +42,43 @@ const AddSaleTypeForm = () => {
   const onSubmit = (values) => {
     const { name
     } = values;
-    console.log("values: : ", values);
-    Axios.post('/api/saleType_add/', {
+    //console.log("values: : ", values);
+
+    if (saleTypeObj) {
+      Axios.put(`/api/saleType_update/${saleTypeObj.id}/`, {
+        name
+    })
+    .then(res => {
+        console.log("Updating SaleType: ", res);
+        dispatch(getSaleType());
+        dispatch(getSale());
+        setNotify({
+                  isOpen: true,
+                  message: 'Druh prodejního kanálu byl úspěšně upraven',
+                  type: 'success'
+                })
+    }).catch(err => console.log(err))
+    }
+
+    else {
+      Axios.post('/api/saleType_add/', {
         name
     })
     .then(res => {
         console.log("Adding SaleType: ", res);
         dispatch(getSaleType());
-        //navigate('/material')
+        setNotify({
+              isOpen: true,
+              message: 'Druh prodejního kanálu byl úspěšně vložen',
+              type: 'success'
+            })
     }).catch(err => console.log(err))
+    }
+    
   }
 
   return (
+    <>
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
@@ -81,8 +115,9 @@ const AddSaleTypeForm = () => {
               type="submit" 
               className="button"
               variant="contained"
+              onClick={handleClose}
               >
-            Přidat
+            {saleTypeObj ? "Změnit" : "Přidat"}
             </Button> 
             </Grid>
         </Grid>
@@ -90,6 +125,11 @@ const AddSaleTypeForm = () => {
       </Form>
       )}
     </Formik>
+    <Notification
+      notify={notify}
+      setNotify={setNotify}
+      />
+    </>
     
   );
 };

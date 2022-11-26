@@ -1,14 +1,13 @@
-import React, {useState, useEffect, useField} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import Axios from 'axios'
-//import { FormikTextField } from 'formik-material-fields';
 import TextField from "../Global/Textfield"
-import ItemTypesWrapper from "../Global/Select/ItemTypesWrapper"
-// import { HashLink as Link } from "react-router-hash-link";
+import Notification from '../Global/Notifications/Notification';
+import { Popup2 } from "../Global/Other/Popup2";
 
-import * as AddButton from '../Material/AddButton';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import SelectArrayWrapper from '../Global/Select/SelectArrayWrapper';
 import { useDispatch, useSelector } from "react-redux";
 import { getSale } from "../Store/Features/Products/saleSlice";
@@ -19,23 +18,31 @@ import {
   Grid,
   Box,
   Button,
-  FormGroup,
   FormControlLabel,
   Checkbox,
   FormControl,
 } from "@mui/material";
+import AddSaleTypeForm from './AddSaleTypeForm';
 
 
-const AddSaleForm = () => {
+const AddSaleForm = (props) => {
 
 const dispatch = useDispatch();
 
 const saleType = useSelector((state) => state.saleType.data)
+const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
+const editedSale = props.editedSale
+const { setOpenPopup } = props;
+const [openPopup2, setOpenPopup2] = useState(false);
 
 useEffect(() => {
   dispatch(getSaleType());
   console.log("saleType: ",saleType)
 }, [SelectArrayWrapper]);
+
+  const handleClose = () => {
+    setOpenPopup2(false);
+  };
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Prosím zadejte název prodejního kanálu"),//.oneOf(itemType),
@@ -45,10 +52,10 @@ useEffect(() => {
   });
 
   const initialValues = {
-    name: "",
-    type: "",
-    brand: true,
-    note: ""
+    name: editedSale?.name ?? "",
+    type: editedSale?.type?.id ?? "",
+    brand: editedSale?.brand ?? true,
+    note: editedSale?.note ?? "",
   };
 
   const navigate = useNavigate();
@@ -61,28 +68,48 @@ useEffect(() => {
         note
     } = values;
     console.log("values: : ", values);
-    Axios.post('/api/sale_add/', {
-        name,
-        type,
-        brand,
-        note
-    })
-    .then(res => {
-        console.log("Adding Sale: ", res);
-        dispatch(getSale()); //aktualizuje seznam prodejních kanálů
-        //navigate('/material')
-    }).catch(err => console.log(err))
+
+    if (editedSale) {
+      Axios.put(`/api/sale_update/${editedSale.id}/`, {
+                    name,
+                    type,
+                    brand,
+                    note
+                })
+                .then(res => {
+                    console.log("Updating Sale: ", res);
+                    dispatch(getSale()); //aktualizuje seznam prodejních kanálů
+                    setNotify({
+                      isOpen: true,
+                      message: 'Prodejní kanál byl úspěšně upraven',
+                      type: 'info'
+                    })
+                }).catch(err => console.log(err))
+    }
+
+    else {
+      Axios.post('/api/sale_add/', {
+              name,
+              type,
+              brand,
+              note
+          })
+          .then(res => {
+              console.log("Adding Sale: ", res);
+              dispatch(getSale()); //aktualizuje seznam prodejních kanálů
+              setNotify({
+                isOpen: true,
+                message: 'Prodejní kanál byl úspěšně uložen',
+                type: 'info'
+              })
+          }).catch(err => console.log(err))
+    }
+    
   }
 
-  console.log("saleType: ",saleType)
-//   const productOptions = itemType.map((opt, index) => (<option key={index} value={opt.id}>
-//  {opt.name}
-//  </option>
-// ));
-
-  // const renderError = (message) => <p style={errorStyle}>{message}</p>;
 
   return (
+    <>
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
@@ -97,7 +124,7 @@ useEffect(() => {
         <Box sx={{  flexWrap: "wrap", }}>
         <Grid 
           container 
-          spacing={2}
+          spacing={1}
           // justifyContent="center"
           //direction="column"
           maxWidth="430px"
@@ -111,46 +138,23 @@ useEffect(() => {
                 gutterBottom //vytvoří mezeru pod textem
                 >Povinné údaje
               </Typography>
-              <TextField id="name" name="name" label="Název" variant="outlined" required />
+              <TextField name="name" label="Název" variant="outlined" required />
             </Grid>
-            {/* <Grid item xs={10}>
-               <ItemTypesWrapper
-                name="product_type"
-                // size="small"
-                label="Typ produktu ..."
-                //options={productOptions}
+            <Grid item xs={10}>
+              <SelectArrayWrapper
+                //id="unit" 
+                name="type" 
+                label="Druh prodejního kanálu"
+                options={saleType}
                 required
-              > 
-                </ItemTypesWrapper>              
+              >
+              </SelectArrayWrapper>
             </Grid>
             <Grid item xs={2}>
-              <AddButton.AddButton fontSize="large" color="success" link="#itemTypeForm" />              
-            </Grid> */}
-            {/* <Grid item xs={6}>
-              <TextField 
-                id="costs" 
-                name="costs" 
-                // size="small"
-                label="Cena materiálu (za kus/jednotku)" 
-                helperText="Zadejte prosím pouze celé číslo (bez haléřů)"
-                InputProps={{
-                  endAdornment: <InputAdornment position='end'>Kč</InputAdornment>
-                }}
-                required variant="outlined" />
-            </Grid> */}
-            <Grid item xs={12}>
-              <FormControl fullWidth required>
-                <SelectArrayWrapper
-                  //id="unit" 
-                  name="type" 
-                  //value={unit}
-                  label="Typ prodejního kanálu"
-                  options={saleType}
-                >
-                </SelectArrayWrapper>
-              </FormControl>
-            </Grid>
-                     
+              <Button sx={{height: "55px", maxWidth: "10px"}} variant="outlined" size="inherit" color="primary" onClick={() => setOpenPopup2(true)}>
+                <AddOutlinedIcon />
+              </Button> 
+            </Grid>         
             <Grid item xs={12}>
               <Typography
                 variant="subtitle2"
@@ -170,11 +174,9 @@ useEffect(() => {
                 type="submit" 
                 className="button"
                 variant="contained"
-                //onClick={() => (<Link to="#itemList"></Link>)}
-                // containerElement={<Link to="#itemList" />}
-                // linkButton={true}
+                onClick={() => isValid && setOpenPopup(false)}
                 >
-                Přidat
+                {editedSale ? "Změnit" : "Přidat"}
                 </Button> 
               {/* </Link> */}
              
@@ -187,9 +189,6 @@ useEffect(() => {
               control={<Checkbox />}
               label="Prodejní kanál pod značkou J&P"
             />
-              {/* <FormGroup name="brand">
-                <FormControlLabel control={<Checkbox name="brand" defaultChecked />} label="Prodejní kanál pod značkou J&P" />
-              </FormGroup> */}
             </Grid>
           </Grid>
         </Box>
@@ -197,6 +196,17 @@ useEffect(() => {
       
       )}
     </Formik>
+    <Popup2 title="Vložení druhu prodejního kanálu"
+      openPopup2={openPopup2}
+      setOpenPopup2={setOpenPopup2}
+      >
+        <AddSaleTypeForm handleClose={handleClose} />
+    </Popup2>
+    <Notification
+      notify={notify}
+      setNotify={setNotify}
+      />
+    </>
     
   );
 };

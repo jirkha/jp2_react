@@ -19,7 +19,7 @@ function Notification(props) {
       anchorOrigin={{ vertical: "top", horizontal: "center" }} //umístí notifikaci do horní části stránky uprostřed
       onClose={handleClose}
     >
-      <Alert severity={notify.type} onClose={handleClose}>
+      <Alert severity={notify.type || "info"} onClose={handleClose}>
         {notify.message}
       </Alert>
     </Snackbar>

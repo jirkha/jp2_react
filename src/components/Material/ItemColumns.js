@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import { format } from 'date-fns'
-import EditIcon from "@mui/icons-material/Edit";
-import { ColumnFilter } from './ColumnFilter'
 
 
 export const ITEM_COLUMNS = [
@@ -17,19 +15,6 @@ export const ITEM_COLUMNS = [
     accessor: "name",
     Cell: ({ row }) => (
       <Link to={`/material/${row.original.id}`}>{row.original.name}</Link>
-    ),
-  },
-  {
-    Header: "",
-    Footer: "",
-    disableFilters: true,
-    accessor: "type.id",
-    Cell: ({ row }) => (
-      <Link to={`/edit_material/${row.original.id}`}>
-        <EditIcon
-          color="warning"
-        />
-      </Link>
     ),
   },
   {
@@ -54,16 +39,37 @@ export const ITEM_COLUMNS = [
     },
   },
   {
+    Header: "Hodnota ",
+    Footer: "Hodnota",
+    accessor: "value",
+    Cell: ({ row }) => {
+      return `${row.original.value} Kč`;
+    },
+  },
+  // {
+  //   Header: "",
+  //   Footer: "",
+  //   disableFilters: true,
+  //   accessor: "type.id",
+  //   Cell: ({ row }) => (
+  //     <Link
+  //       to={`/edit_material/${row.original.id}`}
+  //     >
+  //       <EditIcon color="warning" />
+  //     </Link>
+  //   ),
+  // },
+  {
     Header: "Dodavatel ",
     Footer: "Dodavatel",
     accessor: "supplier",
   },
-  {
-    Header: "Odkaz ",
-    Footer: "Odkaz",
-    accessor: "link",
-    //Cell: ({ row }) => <a href="row.original.link">{row.original.link}</a>,
-  },
+  // {
+  //   Header: "Odkaz ",
+  //   Footer: "Odkaz",
+  //   accessor: "link",
+  //   //Cell: ({ row }) => <a href="row.original.link">{row.original.link}</a>,
+  // },
   // {
   //   Header: "Poznámka ",
   //   Footer: "Poznámka",

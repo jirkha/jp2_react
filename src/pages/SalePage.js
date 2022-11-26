@@ -1,15 +1,15 @@
 import React from 'react'
-import TableItem from '../components/Material/TableItem'
+
+import TableSale from "../components/Sale/TableSale";
+
 import { Container, Typography, Stack } from "@mui/material";
-import ItemTypesList from '../components/Material/ItemTypesList';
+import SaleTypesList from '../components/Sale/SaleTypesList';
 
 
-function ListMaterialPage() {
-
+function SalePage() {
   return (
     <div>
-      <Container component="section" id="itemList">
-        {/* <HeaderPage> */}
+      <Container component="section" id="sale">
         <Typography
           variant="h2"
           sx={{ mt: 3 }} //mezera nad textem
@@ -17,17 +17,11 @@ function ListMaterialPage() {
           align="center" //zarovná doprostřed
           gutterBottom //vytvoří mezeru pod textem
         >
-          &#9782; Materiál
+          &#9782; Prodejní kanály
         </Typography>
-        {/* </HeaderPage> */}
-        <TableItem />
-        {/* </Container> */}
+        <TableSale />
       </Container>
-      {/*</div> */}
 
-      {/* <section id="itemForm"> */}
-
-      {/* <div className="notes"> */}
       <Container component="section" id="itemForm">
         {/*<FormContainer> */}
         <Typography
@@ -37,17 +31,16 @@ function ListMaterialPage() {
           align="center" //zarovná doprostřed
           gutterBottom //vytvoří mezeru pod textem
         >
-          &#9782; Druhy materiálu
+          &#9782; Druhy prodejních kanálů
         </Typography>
         <Stack sx={{ justifyContent: "center" }} direction="row">
-          <ItemTypesList />
+          <SaleTypesList />
         </Stack>
 
         {/* </FormContainer>*/}
       </Container>
-      {/* </section> */}
     </div>
   );
 }
 
-export default ListMaterialPage;
+export default SalePage;

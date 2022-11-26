@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMaterial } from "../Store/Features/Material/materialSlice";
 import { getMaterialType } from '../Store/Features/Material/materialTypeSlice';
 import AddItemTypeForm from './AddItemTypeForm'
+import Notification from '../Global/Notifications/Notification';
 
 import { 
   Typography,
@@ -18,12 +19,7 @@ import {
   Box,
   Button,
   InputAdornment,
-  Select,
-  InputLabel,
   FormControl,
-  MenuItem,
-  Stack,
-  IconButton,
 } from "@mui/material";
 import { Popup2 } from "../Global/Other/Popup2";
 
@@ -32,12 +28,20 @@ const AddItemForm = (props) => {
   
 const dispatch = useDispatch();
 const materialType = useSelector((state) => state.materialType.data)
+const item = props.item
+const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
 const { setOpenPopup } = props;
 const [openPopup2, setOpenPopup2] = useState(false);
     
 useEffect(() => {
   dispatch(getMaterialType());
+  console.log("item",item)
 }, [SelectArrayWrapper]);
+
+  const handleClose = () => {
+    setOpenPopup2(false);
+  };
+
 
 const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
 
@@ -52,13 +56,13 @@ const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-
   });
 
   const initialValues = {
-    name: "",
-    itemType: "",
-    costs: 0,
-    unit: "",
-    supplier: "",
-    link: "",
-    note: "",
+    name: item?.name ?? "",
+    itemType: item?.type?.id ?? "",
+    costs: item?.costs ?? 0,
+    unit: item?.unit ?? "",
+    supplier: item?.supplier ?? "",
+    link: item?.link ?? "",
+    note: item?.note ?? "",
   };
 
   const navigate = useNavigate();
@@ -72,8 +76,11 @@ const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-
         link,
         note
     } = values;
-    console.log("values: : ", values);
-    Axios.post('/api/item_add/', {
+    // console.log("values", values);
+    // console.log("item_submit",item);
+
+    if (item) {
+    Axios.put(`/api/item_update/${item.id}/`, {
         name,
         itemType,
         costs,
@@ -83,12 +90,39 @@ const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-
         note
     })
     .then(res => {
-        console.log("Adding Item: ", res);
+        console.log("Updating Item: ", res);
         dispatch(getMaterial()); //aktualizuje seznam materiálu
         dispatch(getMaterialType());
-        //navigate('/material')
+        setNotify({
+                  isOpen: true,
+                  message: `Materiál ${res.name} byl úspěšně upraven`,
+                  type: 'success'
+                })
     }).catch(err => console.log(err))
   }
+
+  else {
+  Axios.post('/api/item_add/', {
+          name,
+          itemType,
+          costs,
+          unit,
+          supplier,
+          link,
+          note
+      })
+      .then(res => {
+          console.log("Adding Item: ", res);
+          dispatch(getMaterial()); //aktualizuje seznam materiálu
+          //dispatch(getMaterialType());
+          setNotify({
+                    isOpen: true,
+                    message: 'Nový materiál byl úspěšně vložen',
+                    type: 'success'
+                  })
+      }).catch(err => console.log(err))
+  }
+}
 
 //   const productOptions = itemType.map((opt, index) => (<option key={index} value={opt.id}>
 //  {opt.name}
@@ -212,9 +246,9 @@ const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-
                 type="submit" 
                 className="button"
                 variant="contained"
-                onClick={() => setOpenPopup(false)}
+                onClick={() => isValid && setOpenPopup(false)}
                 >
-                Přidat
+                {item ? "Změnit" : "Přidat"}
                 </Button> 
               {/* </Link> */}
              
@@ -252,13 +286,17 @@ const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-
       </Form>      
       )}
     </Formik>    
-  <Popup2 title="Vložení typu materiálu"
+  <Popup2 title="Vložení druhu materiálu"
         openPopup2={openPopup2}
         setOpenPopup2={setOpenPopup2}
         >
-          <AddItemTypeForm />
+          <AddItemTypeForm handleClose={handleClose} />
     
   </Popup2>
+  <Notification
+      notify={notify}
+      setNotify={setNotify}
+      />
   </>
   );
 };

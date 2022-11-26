@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 
-function BasicCard({ typeItem, item, count, note, id, ...props }) {
+function BasicCard({ typeItem, type, typeCount, ...props }) {
 
   return (
     <Card sx={{ minWidth: 80 }}>
@@ -16,22 +16,22 @@ function BasicCard({ typeItem, item, count, note, id, ...props }) {
           {typeItem}
         </Typography> */}
         <Typography color="primary.main" variant="h5" component="div">
-          {item}
+          {type.name}
         </Typography>
-        {count >= 0 && (
+        {typeCount >= 0 && (
           <Typography color="text.secondary">
-            Počet položek: {count}
+            Počet položek: {typeCount}
           </Typography>
         )}
-          {/* {{ note } !== "" && <Typography variant="body2">{note}</Typography>} */}
+        {/* {{ type.note } !== "" && <Typography variant="body2">{type.note}</Typography>} */}
       </CardContent>
       <CardActions>
         <Button
-          disabled
+          //disabled
           size="small"
           variant="outlined"
           color="primary"
-          onClick={() => props.edit(id)}
+          onClick={() => props.edit(type)}
         >
           Upravit
         </Button>
@@ -39,7 +39,7 @@ function BasicCard({ typeItem, item, count, note, id, ...props }) {
           size="small"
           variant="outlined"
           color="error"
-          onClick={(e) => props.delete(id, e)}
+          onClick={(e) => props.delete(type, e)}
         >
           Vymazat
         </Button>

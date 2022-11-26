@@ -67,7 +67,7 @@ function UpdateMadeProduct (props) {
         //navigate(`/product_detail/${props.id}`)
       }}
     >
-      {({ isValid }) => (
+      {({ isValid, values }) => (
       <Form>
           <Stack
         sx={{ justifyContent: "center" }}
@@ -104,11 +104,15 @@ function UpdateMadeProduct (props) {
             </Button> 
             </Grid>
         </Grid>
-        </Stack>
+        </Stack> 
+        <Typography sx={{ mt: 2 }} variant="body2">
+          {values.variant === "+" ? 
+          "Zadaný počet bude přičten k současnému počtu naskladněných výrobků" : 
+          "Zadaný počet bude odečten od současného počtu naskladněných výrobků"}
+        </Typography>
       </Form>
       )}
     </Formik>
-    
   );
 };
 export default UpdateMadeProduct

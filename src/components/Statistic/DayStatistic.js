@@ -11,24 +11,24 @@ import {
 } from "recharts";
 import { Box } from "@mui/material";
 
-function DayStatistic() {
-    let [data, setData] = useState([]);
+function DayStatistic(props) {
+    // let [data, setData] = useState([]);
 
-    useEffect(() => {
-      getData();
-        }, []);
+    // useEffect(() => {
+    //   getData();
+    //     }, []);
 
-    let getData = async () => {
-    Axios.get('/api/daily_sales/')
-       .then((res) => {
-        setData(res.data)
-        //console.log("data: ", res.data);
-    })};
+    // let getData = async () => {
+    // Axios.get('/api/daily_sales/')
+    //    .then((res) => {
+    //     setData(res.data)
+    //     //console.log("data: ", res.data);
+    // })};
 
  
 return (
   <Box>
-    <LineChart width={700} height={500} data={data}>
+    <LineChart width={700} height={500} data={props.data}>
       <Line type="monotone" dataKey="sales" stroke="#2196F3" strokeWidth={3} />
       <CartesianGrid stroke="#ccc" />
       <XAxis dataKey="day" />

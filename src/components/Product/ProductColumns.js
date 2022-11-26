@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { format } from 'date-fns'
+import { format } from "date-fns";
+import EditIcon from "@mui/icons-material/Edit";
+import { IconButton } from "@mui/material";
+import OpenP from "./PopUpProductMade";
 //import { ColumnFilter } from './ColumnFilter'
 
 export const PRODUCT_COLUMNS = [
@@ -18,8 +21,8 @@ export const PRODUCT_COLUMNS = [
     ),
   },
   {
-    Header: "Typ ",
-    Footer: "Typ",
+    Header: "Druh ",
+    Footer: "Druh",
     accessor: "product_type.name",
   },
   // {
@@ -47,9 +50,21 @@ export const PRODUCT_COLUMNS = [
     Header: "Vyrobeno ",
     Footer: "Vyrobeno",
     accessor: "made",
-    Cell: ({ row }) => {
-      return `${row.original.made} ks`;
-    },
+    Cell: ({ row }) => (
+      <div>
+        {`${row.original.made} ks   `}
+        <IconButton
+          onClick={() => OpenP(row.original)}
+          // onClick={() => <OpenP />}
+        >
+          <EditIcon
+            //onClick={() => Open(row.original)}
+            fontSize="small"
+            color="warning"
+          />
+        </IconButton>
+      </div>
+    ),
   },
   {
     Header: "Skladem ",

@@ -1,13 +1,9 @@
 import React from 'react'
 
-import * as AddButton from '../components/Material/AddButton';
-import AddProductTypeForm from "../components/Product/AddProductTypeForm";
-import AddProductForm from "../components/Product/AddProductForm";
-import AddSaleTypeForm from "../components/Product/AddSaleTypeForm";
-import AddSaleForm from "../components/Product/AddSaleForm";
 import TableProduct from '../components/Product/TableProduct';
 
 import { Container, Typography, Stack } from "@mui/material";
+import ProductTypesList from '../components/Product/ProductTypesList';
 
 
 function ListProductPage() {
@@ -22,17 +18,12 @@ function ListProductPage() {
           align="center" //zarovná doprostřed
           gutterBottom //vytvoří mezeru pod textem
         >
-          &#9782; Seznam produktů{" "}
-          <AddButton.AddButton
-            fontSize="inherit"
-            color="success"
-            link="#productForm"
-          />
+          &#9782; Produkty
         </Typography>
         <TableProduct />
       </Container>
 
-      <Container component="section" id="productForm">
+      {/* <Container component="section" id="productForm">
         <Typography
           variant="h2"
           sx={{ mt: 5 }} //mezera nad textem
@@ -45,50 +36,20 @@ function ListProductPage() {
         <Stack sx={{ justifyContent: "center" }} direction="row">
           <AddProductForm />
         </Stack>
-      </Container>
+      </Container> */}
 
-      <Container component="section" id="productTypeForm">
+      <Container component="section" id="itemForm">
         <Typography
+          variant="h3"
           sx={{ mt: 5 }} //mezera nad textem
-          variant="h2"
           color="primary"
           align="center" //zarovná doprostřed
           gutterBottom //vytvoří mezeru pod textem
         >
-          &#9782; Přidat typ produktu
+          &#9782; Druhy produktů
         </Typography>
         <Stack sx={{ justifyContent: "center" }} direction="row">
-          <AddProductTypeForm />
-        </Stack>
-      </Container>
-
-      <Container component="section" id="saleForm">
-        <Typography
-          sx={{ mt: 5 }} //mezera nad textem
-          variant="h2"
-          color="primary"
-          align="center" //zarovná doprostřed
-          gutterBottom //vytvoří mezeru pod textem
-        >
-          &#9782; Přidat prodejní kanál
-        </Typography>
-        <Stack sx={{ justifyContent: "center" }} direction="row">
-          <AddSaleForm />
-        </Stack>
-      </Container>
-
-      <Container component="section" id="saleTypeForm">
-        <Typography
-          sx={{ mt: 5 }} //mezera nad textem
-          variant="h2"
-          color="primary"
-          align="center" //zarovná doprostřed
-          gutterBottom //vytvoří mezeru pod textem
-        >
-          &#9782; Přidat typ prodejního kanálu
-        </Typography>
-        <Stack sx={{ justifyContent: "center" }} direction="row">
-          <AddSaleTypeForm />
+          <ProductTypesList />
         </Stack>
       </Container>
     </div>

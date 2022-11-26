@@ -71,7 +71,7 @@ function ProductDetailPage() {
       .then((data) => {
         console.log("Deleted!");
         //console.log("productId", productId);
-        //console.log("res.data", res.data);
+        console.log("data", data);
         getProduct();
         setNotify({
           isOpen: true,

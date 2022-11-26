@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import Axios from "axios";
 import TextField from "../Global/Textfield";
-import DateTimePicker from "../Global/DateTimePicker";
+import DateTimePicker from "../Global/DateTimePicker/DateTimePicker";
 
 import * as AddButton from "../Material/AddButton";
 import ItemWrapper from "../Global/Select/ItemWrapper";
@@ -22,13 +22,18 @@ import {
 import { ShowValue } from "../Global/Utils/showValue";
 
 
-const StorageForm = () => {
+const StorageForm = (props) => {
   const dispatch = useDispatch();
   const item = useSelector((state) => state.material.data)
+  const { setOpenPopup } = props;
 
 useEffect(() => {
   dispatch(getMaterial());
 }, []);
+
+  const handleClose = () => {
+    setOpenPopup(false);
+  };
 
   const validationSchema = Yup.object({
     day_of_storage: "",
@@ -172,6 +177,7 @@ useEffect(() => {
                       type="submit"
                       className="button"
                       variant="contained"
+                      onClick={handleClose}
                     >
                       Přidat
                     </Button>

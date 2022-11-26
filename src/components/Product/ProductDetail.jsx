@@ -9,6 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import UpdateMadeProduct from './UpdateMadeProduct';
+import open from "./ProductColumns"
 
 
 function ProductDetail(props) {

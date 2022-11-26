@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTable, useSortBy, useGlobalFilter, useFilters, usePagination, useRowSelect } from "react-table";
 import { useNavigate } from "react-router-dom";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import { GlobalFilter } from "../../Material/GlobalFilter";
 import { ColumnFilter } from "../../Material/ColumnFilter";
 import DeleteColumns from "./DeleteColumns";
+
 import {
   BsFillArrowUpSquareFill,
   BsFillArrowDownSquareFill,
@@ -37,8 +40,11 @@ import {
   CircularProgress,
   Select,
   MenuItem,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
-import { CenterFocusStrong } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
 
 
 function TableGlobal(props) {
@@ -48,7 +54,7 @@ function TableGlobal(props) {
   // const data = useMemo(() => props.dataAPI);
   const data = props.dataAPI;
   const loading = props.loadingState;
-  const { setOpenPopup } = props;
+  const { addAction, editAction } = props;
 
   const defaultColumn = React.useMemo(
     () => ({
@@ -137,79 +143,81 @@ function TableGlobal(props) {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid
-          container
-          sx={
-            {
-              //border: "1px solid",
-              //backgroundColor: "primary.light",
-            }
-          }
-        >
+        <Grid container>
           <Grid
             container
-            //spacing={{ xs: 0, md: 0 }}
-            // sx={{
-            //   border: "1px solid",
-            //   backgroundColor: "primary.light"
-            // }}
+            item
+            xs={6}
+            justifyContent={"start"}
+            alignContent={"center"}
           >
-            <Grid
-              container
-              item
-              xs={6}
-              justifyContent={"start"}
-              alignContent={"center"}
-            >
-              <FormLabel>Vyberte sloupce k zobrazení</FormLabel>
-            </Grid>
-            <Grid
-              container
-              item
-              xs={6}
-              justifyContent={"end"}
-              alignContent={"center"}
-            >
-              <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-            </Grid>
+            {/* <FormLabel>Vyberte sloupce k zobrazení</FormLabel> */}
           </Grid>
-          <Grid container sx={{ mt: 2, mb: 1 }}>
-            <Grid item xs={12}>
-              <Paper elevation={2}>
-                <FormControlLabel
-                  label=<strong>{"Zobraz vše"}</strong>
-                  control={
-                    <CheckboxTable
-                      size="small"
-                      {...getToggleHideAllColumnsProps()}
-                    />
-                  }
-                />
-              </Paper>
-            </Grid>
+          <Grid
+            container
+            item
+            xs={6}
+            justifyContent={"end"}
+            alignContent={"center"}
+          >
+            <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
           </Grid>
-          <Grid container spacing={{ xs: 1, md: 1 }}>
-            {allColumns.map((column) => (
-              <Grid item xs={6} sm={3} md={3} key={column.id}>
-                {/* <div key={column.id}> */}
+        </Grid>
+
+        <Accordion sx={{ mt: 2 }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <FilterAltRoundedIcon sx={{ mr: 2 }} />
+            <Typography>Filtrování sloupců</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container sx={{ mt: 2, mb: 1 }}>
+              <Grid item xs={12}>
                 <Paper elevation={2}>
                   <FormControlLabel
-                    label={column.Header}
+                    label={"Zobraz vše"}
                     control={
                       <CheckboxTable
                         size="small"
-                        {...column.getToggleHiddenProps()}
+                        {...getToggleHideAllColumnsProps()}
                       />
                     }
                   />
                 </Paper>
               </Grid>
-            ))}
-          </Grid>
-        </Grid>
+            </Grid>
+            <Grid container spacing={{ xs: 1, md: 1 }}>
+              {allColumns.map((column) => (
+                <Grid item xs={6} sm={3} md={3} key={column.id}>
+                  {/* <div key={column.id}> */}
+                  <Paper elevation={2}>
+                    <FormControlLabel
+                      label={column.Header}
+                      control={
+                        <CheckboxTable
+                          size="small"
+                          {...column.getToggleHiddenProps()}
+                        />
+                      }
+                    />
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
       </Box>
 
       <Paper elevation={2} sx={{ p: "10px", mt: 2 }}>
+        {/* <Stack sx={{ justifyContent: "right" }}>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="large"
+            onClick={() => addAction()}
+          >
+            Přidat {props.name}
+          </Button>
+        </Stack> */}
         <TableContainer
           component={Paper}
           sx={{ maxHeight: "700px", mt: 3, borderRadius: "15px" }}
@@ -223,42 +231,36 @@ function TableGlobal(props) {
             <TableHead>
               {headerGroups.map((headerGroup) => (
                 <TableRow {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(
-                    (column) => (
-                      //console.log("column", column),
-                      (
-                        <TableCell
-                          sx={{
-                            backgroundColor: "primary.main",
-                          }}
-                          {...column.getHeaderProps(
-                            column.getSortByToggleProps()
-                          )}
-                        >
-                          {" "}
-                          {column.render("Header")} {/* název sloupce */}
-                          <>
-                            {column.Header !== "" && (
-                              <Typography>
-                                {column.isSorted ? (
-                                  column.isSortedDesc ? (
-                                    <BsFillArrowDownSquareFill />
-                                  ) : (
-                                    <BsFillArrowUpSquareFill />
-                                  )
-                                ) : (
-                                  <BsSortDown />
-                                )}
-                              </Typography>
+                  {headerGroup.headers.map((column) => (
+                    //console.log("column", column),
+                    <TableCell
+                      sx={{
+                        backgroundColor: "primary.main",
+                      }}
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
+                      {" "}
+                      {column.render("Header")} {/* název sloupce */}
+                      <>
+                        {column.Header !== "" && (
+                          <Typography>
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <BsFillArrowDownSquareFill />
+                              ) : (
+                                <BsFillArrowUpSquareFill />
+                              )
+                            ) : (
+                              <BsSortDown />
                             )}
-                          </>
-                          <div>
-                            {column.canFilter ? column.render("Filter") : null}
-                          </div>
-                        </TableCell>
-                      )
-                    )
-                  )}
+                          </Typography>
+                        )}
+                      </>
+                      <div>
+                        {column.canFilter ? column.render("Filter") : null}
+                      </div>
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))}
             </TableHead>
@@ -307,7 +309,7 @@ function TableGlobal(props) {
           <ButtonGroup
             variant="contained"
             //size="small"
-            aria-label="outlined primary button group"
+            //aria-label="outlined primary button group"
           >
             <Button
               size="small"
@@ -352,18 +354,29 @@ function TableGlobal(props) {
             direction={{ sm: "column", md: "row" }}
             spacing={{ xs: 1, sm: 2, md: 6 }}
           >
-            <DeleteColumns
-              disabledRow={selectedFlatRows.length < 1}
-              typeTable={props.type}
-              //rows={row.original.id}
-              //key={e}
-              selectedRows={selectedFlatRows}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setOpenPopup(true)}
-            >
+            <ButtonGroup variant="outlined">
+              <DeleteColumns
+                disabledRow={selectedFlatRows.length < 1}
+                typeTable={props.type}
+                //rows={row.original.id}
+                //key={e}
+                selectedRows={selectedFlatRows}
+              />
+              <Button
+                //type="delete"
+                //size="small"
+                //variant="contained"
+                //color="warning"
+                sx={{ mt: 1 }}
+                startIcon={<EditIcon />}
+                disabled={selectedFlatRows.length != 1}
+                onClick={() => editAction(selectedFlatRows[0].original)}
+                //onClick={() => editAction(selectedFlatRows[0].values)}
+              >
+                Upravit
+              </Button>
+            </ButtonGroup>
+            <Button variant="contained" color="primary" onClick={addAction}>
               Přidat {props.name}
             </Button>
           </Stack>

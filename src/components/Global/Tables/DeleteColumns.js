@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useConfirm } from "material-ui-confirm";
+
 import { Button } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { useDispatch } from "react-redux";
@@ -13,10 +15,19 @@ import { getTransaction } from "../../Store/Features/Products/transactionSlice";
 export default function DeleteColumns(props) {
 
     const dispatch = useDispatch();
+    const confirm = useConfirm();
 
   const itemDelete = (id, type, e) => {
     e.preventDefault();
-    
+    confirm({
+      //title: `Opravdu chtete vymazat položku ${type.name}?`,
+      title: "Opravdu chtete vymazat položku/y?",
+      titleProps: { color: "text.primary", fontSize: 20, fontWeight: "light" },
+      cancellationButtonProps: { variant: "outlined" },
+      confirmationButtonProps: { variant: "outlined" },
+    })
+    .then(() => {
+
     if (props.typeTable === "item")
     {Axios.delete(`/api/item_delete/${id}`)
     .then(() => {
@@ -61,18 +72,19 @@ export default function DeleteColumns(props) {
   } else {
     console.log("nepodporovaný typ tabulky");
   }
-};
+}).catch(() => console.log("Deletion cancelled."));
+  }
 
         const navigate = useNavigate();
 
   return (
-    <div>
+
       <Button
         type="delete"
         id={props.typeTable}
         //size="small"
-        variant="contained"
-        color="error"
+        //variant="contained"
+        //color="error"
         sx={{mt:1}}
         startIcon={<DeleteOutlinedIcon />}
         disabled={props.disabledRow}
@@ -88,6 +100,6 @@ export default function DeleteColumns(props) {
       >
         Vymazat
       </Button>
-    </div>
+
   );
 }

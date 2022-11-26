@@ -19,18 +19,17 @@ import Notification from '../Global/Notifications/Notification';
 
 const AddItemTypeForm = (props) => {
 
-  let materialTypeId = props.materialTypeId
-
   const dispatch = useDispatch();
   const materialType = useSelector((state) => state.materialType.data)
   const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
-  const { setOpenPopup2 } = props;
+  const materialTypeObj = props.materialTypeObj
+  const { handleClose } = props;
 
    useEffect(() => {
     dispatch(getMaterialType());
-    console.log("materialTypeId",materialTypeId)
-    console.log("materialType",materialType)
-  }, [materialTypeId]);
+    // console.log("materialTypeObj",materialTypeObj)
+    // console.log("materialType",materialType)
+  }, []);
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Prosím zadejte název"),
@@ -38,8 +37,8 @@ const AddItemTypeForm = (props) => {
   });
 
   const initialValues = {
-    name: materialType?.name ?? "",
-    note: materialType?.note ?? "",
+    name: materialTypeObj?.name ?? "",
+    note: materialTypeObj?.note ?? "",
   };
 
   const navigate = useNavigate();
@@ -47,27 +46,28 @@ const AddItemTypeForm = (props) => {
   const onSubmit = (values) => {
     const { name, note
     } = values;
-    console.log("values: : ", values);
-    // {
-    //   if (materialTypeId !== "") {
-    //     Axios.put(`/api/itemType_update/${materialTypeId}/`, {
-    //             name,
-    //             note
-    //         })
-    //         .then(res => {
-    //             console.log("Updating Item", res);
-    //             //console.log("type: ",res.data.type);
-    //             dispatch(getMaterialType());
-    //             dispatch(getMaterial()); //aktualizuje seznam materiálu, aby se aktualizovalo pole typ materiálu
-    //             setNotify({
-    //               isOpen: true,
-    //               message: 'Typ materiálu byl úspěšně upraven',
-    //               type: 'success'
-    //             })
-    //         }).catch(err => console.log(err))
-    //   }
+    //console.log("values: : ", values);
+    {
+      //if (materialTypeObj !== "") {
+      if (materialTypeObj ) {
+        Axios.put(`/api/itemType_update/${materialTypeObj.id}/`, {
+                name,
+                note
+            })
+            .then(res => {
+                console.log("Updating Item", res);
+                //console.log("type: ",res.data.type);
+                dispatch(getMaterialType());
+                dispatch(getMaterial()); //aktualizuje seznam materiálu, aby se aktualizovalo pole typ materiálu
+                setNotify({
+                  isOpen: true,
+                  message: 'Typ materiálu byl úspěšně upraven',
+                  type: 'success'
+                })
+            }).catch(err => console.log(err))
+      }
 
-    //   else {
+      else {
         Axios.post('/api/itemType_add/', {
         name, note })
     .then(res => {
@@ -76,11 +76,11 @@ const AddItemTypeForm = (props) => {
         dispatch(getMaterialType());
         setNotify({
                   isOpen: true,
-                  message: 'Nový typ materiálu byl úspěšně vložen',
+                  message: 'Nový druh materiálu byl úspěšně vložen',
                   type: 'success'
                 })
     }).catch(err => console.log(err))
-      }
+      }}}
 
 
   return (
@@ -126,15 +126,27 @@ const AddItemTypeForm = (props) => {
               <TextField name="note" label="Popis" multiline rows={6} variant="outlined" />
             </Grid>
             <Grid item xs={12}>
+            {materialTypeObj?.id ?
             <Button 
               type="submit" 
               className="button"
               variant="contained"
-              onClick={() => setOpenPopup2(false)}
+              onClick={handleClose}
+              >
+            Změnit
+            </Button>
+               :
+            <Button 
+              type="submit" 
+              className="button"
+              variant="contained"
+              onClick={handleClose}
               >
             Přidat
-            </Button> 
+            </Button>
+             }
             </Grid>
+
         </Grid>
         </Stack>
       </Form>
