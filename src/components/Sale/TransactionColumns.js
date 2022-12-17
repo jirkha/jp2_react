@@ -53,7 +53,7 @@ export const TRANSACTION_COLUMNS = [
     Footer: "Tržba",
     accessor: "sum_sales",
     Cell: ({ row }) => {
-      return `${row.original.sum_sales} Kč`;
+      return `${row.original.sum_sales.toLocaleString()} Kč`;
     },
   },
   {

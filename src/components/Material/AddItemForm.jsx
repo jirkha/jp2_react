@@ -30,7 +30,7 @@ const dispatch = useDispatch();
 const materialType = useSelector((state) => state.materialType.data)
 const item = props.item
 const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
-const { setOpenPopup } = props;
+const { setOpenPopup, getMaterialDetail } = props;
 const [openPopup2, setOpenPopup2] = useState(false);
     
 useEffect(() => {
@@ -93,6 +93,7 @@ const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-
         console.log("Updating Item: ", res);
         dispatch(getMaterial()); //aktualizuje seznam materiálu
         dispatch(getMaterialType());
+        getMaterialDetail();
         setNotify({
                   isOpen: true,
                   message: `Materiál ${res.name} byl úspěšně upraven`,

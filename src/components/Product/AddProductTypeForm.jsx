@@ -5,7 +5,7 @@ import { Formik, Form } from "formik";
 import Axios from 'axios'
 import TextField from "../Global/Textfield"
 import Notification from '../Global/Notifications/Notification';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getProduct } from '../Store/Features/Products/productSlice';
 import { getProductType } from "../Store/Features/Products/productTypeSlice";
 

@@ -5,12 +5,15 @@ import { useField, useFormikContext } from "formik";
 const SelectArrayWrapper = ({ name, options, ...otherProps }) => {
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
+  const { handleOnChange } = otherProps ; //navázáno na komponentu YearPicker (výběr roku ihned po zvolení bez nutnosti potvrzení)
 
   const handleChange = (evt) => {
     const { value } = evt.target;
     // console.log("name: ", name);
     // console.log("value: ", value);
+    // console.log("...otherProps: ", otherProps['handleOnChange']);
     setFieldValue(name, value);
+    {otherProps["handleOnChange"] && handleOnChange(value)} //ověří, zda je SelectArrayWrapper vyvolán komponentou YearPicker
   };
 
   const configSelect = {
@@ -20,6 +23,7 @@ const SelectArrayWrapper = ({ name, options, ...otherProps }) => {
     variant: "outlined",
     fullWidth: true,
     onChange: handleChange,
+    
     // SelectProps:{
     //   multiple: true
     //   //value: formState.userRoles,

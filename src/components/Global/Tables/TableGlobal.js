@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTable, useSortBy, useGlobalFilter, useFilters, usePagination, useRowSelect } from "react-table";
-import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import { GlobalFilter } from "../../Material/GlobalFilter";
@@ -13,7 +12,6 @@ import {
   BsSortDown,
 } from "react-icons/bs";
 import { CheckboxTable } from "../Checkbox";
-import Axios from "axios";
 
 import {
   Container,

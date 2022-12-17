@@ -1,11 +1,17 @@
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   //useParams
 } from "react-router-dom";
-import { Container } from "@mui/material";
-import { ConfirmProvider } from "material-ui-confirm";
+//import Login from "./components/Global/Login/Login";
+import LoginButton from "./components/Global/Login/LoginButton"
+import LogoutButton from "./components/Global/Login/LogoutButton";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Container, Typography, IconButton, Link } from "@mui/material";
+import { ConfirmProvider } from "material-ui-confirm"; //umožňuje přidat potvrzovací okna
+import logo from "C:/Users/vecko/jp_2.0/jp2_react/src/assets/J-P web special_black.png";
 
 // import "./App.css";
 //import "./style.css";
@@ -13,12 +19,10 @@ import { ConfirmProvider } from "material-ui-confirm";
 import ListMaterialPage from "./pages/ListMaterialPage";
 import MaterialPage from "./pages/MaterialPage";
 import StockPage from "./pages/StockPage";
-import UpdateMaterialPage from "./pages/UpdateMaterialPage";
 import TestPage_old from "./pages/TestPage_old";
-import {TestPage} from "./pages/TestPage";
-import ListProductPage from './pages/ListProductPage'
+import { TestPage } from "./pages/TestPage";
+import ListProductPage from "./pages/ListProductPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
-import UpdateProductPage from "./pages/UpdateProductPage";
 import SalesStatisticPage from "./pages/SalesStatisticPage";
 
 import NavbarJP from "./components/Navbar/Navbar";
@@ -27,24 +31,51 @@ import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import ListTransactionPage from "./pages/ListTransactionPage";
 import SalePage from "./pages/SalePage";
-
+import SaleDetailPage from "./pages/SaleDetailPage";
 
 function App() {
+
+  // const [token, setToken] = useState();
+
+  // if (!token) {
+  //   return <Login setToken={setToken} />;
+  // }
+
+const { isAuthenticated, isLoading } = useAuth0();
+
+
+  if (isLoading) {
+    return (
+      <div>
+        {" "}
+        <NavbarJP />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div>
+        <img src={logo} width="270" height="65" alt="Logo" />
+        <Typography variant="h4" color="primary" sx={{ mt: 2, mb: 2 }}>
+          Pro pokračování se prosím přihlašte
+        </Typography>
+        <LoginButton />
+      </div>
+    );
+  }
+
   return (
-    // <div className="container">
     <>
-      <ConfirmProvider>
-        <Router>
+      {isAuthenticated && (
+        <ConfirmProvider>
+          {/* <Router> */}
           {/* <main className="py-3"> */}
           <Container>
             <NavbarJP />
             <Routes>
               <Route path="/" element={<Home />}></Route>
               <Route path="/material" element={<ListMaterialPage />}></Route>
-              <Route
-                path="/edit_material/:materialId"
-                element={<UpdateMaterialPage />}
-              ></Route>
               <Route path="/testpage" element={<TestPage />}></Route>
               <Route path="/testpage2" element={<TestPage_old />}></Route>
               <Route
@@ -58,10 +89,6 @@ function App() {
                 element={<ProductDetailPage />}
               ></Route>
               <Route
-                path="/edit_product/:productId"
-                element={<UpdateProductPage />}
-              ></Route>
-              <Route
                 path="/transaction"
                 element={<ListTransactionPage />}
               ></Route>
@@ -69,17 +96,19 @@ function App() {
                 path="/sales_statistic"
                 element={<SalesStatisticPage />}
               ></Route>
+              <Route path="/sale" element={<SalePage />}></Route>
               <Route
-                path="/sale"
-                element={<SalePage />}
+                path="/sale_detail/:saleId"
+                element={<SaleDetailPage />}
               ></Route>
             </Routes>
           </Container>
           {/* </main> */}
 
           <Footer />
-        </Router>
-      </ConfirmProvider>
+          {/* </Router> */}
+        </ConfirmProvider>
+      )}{" "}
     </>
   );
 }

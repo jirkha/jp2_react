@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 
 import { getMaterial } from "../components/Store/Features/Material/materialSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Typography } from "@mui/material";
+import {default as A} from "../components/Product/AddProductMultistepForm";
 
 export default function Tags() {
 
@@ -20,13 +20,14 @@ export default function Tags() {
   }, [dispatch]);
 
   return (
-    <Stack spacing={3} sx={{ width: 500 }}>
-      <Autocomplete
-        multiple
-        options={material}
-        getOptionLabel={(option) => option.name}
-        //defaultValue={[material[0]]}
-        renderInput={(params, index) => (
+    <>
+      <Stack spacing={3} sx={{ width: 500 }}>
+        <Autocomplete
+          multiple
+          options={material}
+          getOptionLabel={(option) => option.name}
+          //defaultValue={[material[0]]}
+          renderInput={(params, index) => (
             <TextField
               {...params}
               key={index}
@@ -34,58 +35,60 @@ export default function Tags() {
               label={index}
               placeholder="Favorites"
             />
-        )}
-      />
-      <Autocomplete
-        multiple
-        id="tags-outlined"
-        options={top100Films}
-        getOptionLabel={(option) => option.title}
-        defaultValue={[top100Films[13]]}
-        filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="filterSelectedOptions"
-            placeholder="Favorites"
-          />
-        )}
-      />
-      <Autocomplete
-        multiple
-        id="tags-filled"
-        options={top100Films.map((option) => option.title)}
-        defaultValue={[top100Films[13].title]}
-        freeSolo
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              variant="outlined"
-              label={option}
-              {...getTagProps({ index })}
+          )}
+        />
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          options={top100Films}
+          getOptionLabel={(option) => option.title}
+          defaultValue={[top100Films[13]]}
+          filterSelectedOptions
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="filterSelectedOptions"
+              placeholder="Favorites"
             />
-          ))
-        }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="filled"
-            label="freeSolo"
-            placeholder="Favorites"
-          />
-        )}
-      />
-      <Autocomplete
-        multiple
-        id="tags-readOnly"
-        options={top100Films.map((option) => option.title)}
-        defaultValue={[top100Films[12].title, top100Films[13].title]}
-        readOnly
-        renderInput={(params) => (
-          <TextField {...params} label="readOnly" placeholder="Favorites" />
-        )}
-      />
-    </Stack>
+          )}
+        />
+        <Autocomplete
+          multiple
+          id="tags-filled"
+          options={top100Films.map((option) => option.title)}
+          defaultValue={[top100Films[13].title]}
+          freeSolo
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => (
+              <Chip
+                variant="outlined"
+                label={option}
+                {...getTagProps({ index })}
+              />
+            ))
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="filled"
+              label="freeSolo"
+              placeholder="Favorites"
+            />
+          )}
+        />
+        <Autocomplete
+          multiple
+          id="tags-readOnly"
+          options={top100Films.map((option) => option.title)}
+          defaultValue={[top100Films[12].title, top100Films[13].title]}
+          readOnly
+          renderInput={(params) => (
+            <TextField {...params} label="readOnly" placeholder="Favorites" />
+          )}
+        />
+      </Stack>
+      <A />
+    </>
   );
 }
 

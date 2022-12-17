@@ -1,55 +1,83 @@
-// import { Link, useMatch, useResolvedPath } from "react-router-dom";
+// import { Link, NavLink, useMatch, useResolvedPath } from "react-router-dom";
 // import {
 //   AppBar,
 //   Toolbar,
 //   IconButton,
-//   // Typography,
+//   Typography,
 //   Button,
 //   Stack,
-//   // Menu,
-//   // MenuItem,
+//   Menu,
+//   MenuItem,
 // } from "@mui/material";
 // import logo from "C:/Users/vecko/jp_2.0/jp2_react/src/assets/J-P web special_black.png";
-// // import "./navbar.css";
+// import "./navbar.css";
 
 // export default function NavbarJP() {
 //   return (
-//     <AppBar position="sticky">
-//       <Toolbar>
-//         <IconButton
-//           //size="large"
-//           edge="start"
-//           color="inherit"
-//           aria-label="Logo"
-//           sx={{ mr: 2 }}
-//         >
-//           <Link to="/">
-//             <img src={logo} width="140" height="35" alt="Logo" />
-//           </Link>
-//         </IconButton>
-//         <Stack
-//           direction="row"
-//           //alignItems="center"
-//           spacing={1}
-//           justifyContent="center"
-//         >
-//           <Button color="inherit" href="/material" to="/material">
-//             Materiál
-//           </Button>
-//           <Button color="inherit" href="/testpage" to="/testpage">
-//             Test1
-//           </Button>
-//           <Button color="inherit" href="/testpage2" to="/testpage2">
-//             Test2
-//           </Button>
-//         </Stack>
-//         <ul></ul>
-//       </Toolbar>
-//     </AppBar>
+//     <div>
+//       <AppBar position="sticky">
+//         <Toolbar>
+//           <IconButton
+//             size="large"
+//             edge="start"
+//             color="inherit"
+//             aria-label="Logo"
+//             sx={{ mr: 2 }}
+//           >
+//             <Link to="/">
+//               <img src={logo} width="140" height="35" alt="Logo" />
+//             </Link>
+//           </IconButton>
+//           <Stack
+//             direction="row"
+//             alignItems="center"
+//             spacing={1}
+//             justifyContent="center"
+//           >
+//             <NavLink
+//               color="inherit"
+//               activeStyle={{
+//                 color: "#5754a8",
+//               }}
+//               to="/material"
+//             >
+//               Materiál
+//             </NavLink>
+//             <NavLink
+//               color="inherit"
+//               activeStyle={{
+//                 fontWeight: "bold",
+//                 color: "red",
+//               }}
+//               to="/testpage"
+//             >
+//               TestPage
+//             </NavLink>
+//             <Button color="inherit" href="/testpage" to="/testpage">
+//               Test1
+//             </Button>
+//             <Button color="inherit" href="/testpage2" to="/testpage2">
+//               Test2
+//             </Button>
+//           </Stack>
+//           <ul></ul>
+//         </Toolbar>
+//       </AppBar>
+//       <ul className="nav">
+//         <li>
+//           <NavLink exact to="/">
+//             Home
+//           </NavLink>
+//         </li>
+//         <li>
+//           <NavLink activeStyle={{ color: "#5754a8" }} to="/testpage">
+//             testpage
+//           </NavLink>
+//         </li>
+//       </ul>
+//     </div>
 //   );
 // }
-
-
 
 // function CustomLink({ to, children, ...props }) {
 //   const resolvedPath = useResolvedPath(to);
@@ -65,7 +93,8 @@
 // }
 
 import React, { useState } from "react";
-import { Link } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Link } from "@mui/material";
 // import makeStyles from "@mui/styles/makeStyles";
 import { AppBar } from "@mui/material";
 import { Toolbar } from "@mui/material";
@@ -83,7 +112,7 @@ import logo from "C:/Users/vecko/jp_2.0/jp2_react/src/assets/J-P web special_bla
 import { Grid } from "@mui/material";
 import { Tabs } from "@mui/material";
 import { Tab } from "@mui/material";
-
+import LogoutButton from "../Global/Login/LogoutButton";
 
 const navigationLinks = [
   { name: "T1", href: "/testpage" },
@@ -98,11 +127,12 @@ const navigationLinks = [
 
 export default function NavbarJP() {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState();
+  const pathname = useLocation();
+  const navigate = useNavigate();
 
   return (
     <AppBar position="sticky">
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <Toolbar disableGutters>
           <IconButton
             //size="large"
@@ -122,27 +152,59 @@ export default function NavbarJP() {
                   <Link
                     //className={styles.link}
                     //indicatorColor="secondary"
+                    component="button"
                     key={item.name}
-                    sx={{ marginRight: 2 }}
-                    color="inherit"
+                    sx={
+                      item.href === pathname.pathname
+                        ? {
+                            marginRight: 2,
+                            //backgroundColor: "primary.light",
+                            border: 2, //bílé okraje
+                            borderRadius: "5px", //zaoblení
+                            p: 1, // odsazení okraje od obsahu
+                            fontWeight: "bold", //tloušťka písma
+                            fontSize: 15, // velikost textu
+                          }
+                        : {
+                            marginRight: 2,
+                          }
+                    }
+                    //color="inherit"
                     variant="button"
                     underline="hover"
                     href={item.href}
                     label={item.name}
+                    onClick={() => navigate(item.href)}
+                    color={
+                      item.href === pathname.pathname ? "inherit" : "inherit"
+                    }
                   >
                     {item.name}
+                    {/* <Button
+                      color={
+                      item.href === pathname.pathname ? "secondary" : "inherit"
+                    }
+                      onClick={() => setValue(item.href)}
+                    >
+                      {item.name}
+                    </Button> */}
                   </Link>
                 ))}
               </Grid>
             </Grid>
           </Box>
+
           <Box sx={{ display: { xs: "block", md: "none" } }}>
             <IconButton onClick={() => setOpen(true)}>
               <MenuIcon />
             </IconButton>
           </Box>
+          <Box sx={{ maxWidth: 3, display: { xs: "none", md: "inline" } }}>
+            <LogoutButton />
+          </Box>
         </Toolbar>
       </Container>
+
       <SwipeableDrawer
         anchor="right"
         open={open}
@@ -179,7 +241,6 @@ export default function NavbarJP() {
     </AppBar>
   );
 }
-
 
 // function CustomLink({ to, children, ...props }) {
 //   const resolvedPath = useResolvedPath(to);

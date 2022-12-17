@@ -43,7 +43,7 @@ export const ITEM_COLUMNS = [
     Footer: "Hodnota",
     accessor: "value",
     Cell: ({ row }) => {
-      return `${row.original.value} Kč`;
+      return `${row.original.value.toLocaleString()} Kč`;
     },
   },
   // {

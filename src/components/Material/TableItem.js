@@ -16,7 +16,7 @@ function TableItem() {
   }, []);
 
   const editAction = (item) => {
-    //console.log("item", item);
+    console.log("item", item);
     setItem(item);
     setTitle(`Editace materiálu ${item.name}`);
     setOpenPopup(true);

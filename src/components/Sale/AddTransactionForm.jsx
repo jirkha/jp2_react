@@ -34,8 +34,6 @@ import AddSaleForm from './AddSaleForm';
 import AddProductForm from '../Product/AddProductForm';
 
 
-
-
 const AddTransactionForm = (props) => {
 
 const dispatch = useDispatch();
@@ -294,6 +292,9 @@ const changePrice = {
                 gutterBottom //vytvoří mezeru pod textem
                 >
                   Standardní cena produktu <strong><ShowValue object={product} data={values.product} value="price" /> Kč </strong>
+                  {editedTransaction && 
+                  <Typography>Prodáno za cenu <strong> {editedTransaction.real_price} Kč</strong>
+                  </Typography>}
               </Typography>
             </Grid>}
             </>
@@ -350,7 +351,7 @@ const changePrice = {
                 }}
                 required variant="outlined" />
             </Grid>}    
-            {values.difference_price < 1 && values.product &&
+            { (editedTransaction || (values.difference_price < 1 && values.product)) &&
                 <Grid item xs={12}>
                   <Typography color="primary">
                     Skladem {" "}<strong>
@@ -363,7 +364,7 @@ const changePrice = {
                   </Typography>
                 </Grid>}
                 
-            {values.difference_price > 0 && values.product &&
+            { values.difference_price > 0 && values.product && !editedTransaction &&
             <Grid item xs={12}>
               <Stack
                 direction="row"

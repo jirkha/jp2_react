@@ -32,7 +32,7 @@ const dispatch = useDispatch();
 const saleType = useSelector((state) => state.saleType.data)
 const [notify, setNotify] = useState({isOpen: false, message: '', type: ''})
 const editedSale = props.editedSale
-const { setOpenPopup } = props;
+const { setOpenPopup, getThisSale } = props;
 const [openPopup2, setOpenPopup2] = useState(false);
 
 useEffect(() => {
@@ -79,6 +79,7 @@ useEffect(() => {
                 .then(res => {
                     console.log("Updating Sale: ", res);
                     dispatch(getSale()); //aktualizuje seznam prodejních kanálů
+                    getThisSale(); // aktualizuje prodejní kanál (při editeaci z detailu prod.kanálu)
                     setNotify({
                       isOpen: true,
                       message: 'Prodejní kanál byl úspěšně upraven',

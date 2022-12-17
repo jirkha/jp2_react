@@ -15,9 +15,9 @@ export const DAY_STATISTIC_COLUMNS = [
   {
     Header: "Tržby ",
     Footer: "Tržby",
-    accessor: "sales",
+    accessor: "tržby",
     Cell: ({ row }) => {
-      return `${row.original.sales} Kč`;
+      return `${row.original.tržby.toLocaleString()} Kč`;
     },
   },
-]
+];

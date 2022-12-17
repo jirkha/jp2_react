@@ -14,9 +14,9 @@ export const SALE_COLUMNS = [
     Header: "Název ",
     Footer: "Název",
     accessor: "name",
-    // Cell: ({ row }) => (
-    //   <Link to={`/product_detail/${row.original.id}`}>{row.original.name}</Link>
-    // ),
+    Cell: ({ row }) => (
+      <Link to={`/sale_detail/${row.original.id}`}>{row.original.name}</Link>
+    ),
   },
   {
     Header: "Druh ",
@@ -33,7 +33,7 @@ export const SALE_COLUMNS = [
     Footer: "Tržby",
     accessor: "amount",
     Cell: ({ row }) => {
-      return `${row.original.amount} Kč`;
+      return `${row.original.amount.toLocaleString()} Kč`;
     },
   },
   {

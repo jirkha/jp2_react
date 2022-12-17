@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
-import OpenP from "./PopUpProductMade";
 //import { ColumnFilter } from './ColumnFilter'
 
 export const PRODUCT_COLUMNS = [
@@ -51,20 +50,32 @@ export const PRODUCT_COLUMNS = [
     Footer: "Vyrobeno",
     accessor: "made",
     Cell: ({ row }) => (
-      <div>
-        {`${row.original.made} ks   `}
-        <IconButton
-          onClick={() => OpenP(row.original)}
-          // onClick={() => <OpenP />}
-        >
-          <EditIcon
-            //onClick={() => Open(row.original)}
-            fontSize="small"
-            color="warning"
-          />
+      <Link
+        style={{ color: "inherit", textDecoration: "inherit" }}
+        to={`/product_detail/${row.original.id}`}
+        state={{ data: "made" }}
+      >
+        {`${row.original.made} ks`}
+        <IconButton>
+          <EditIcon fontSize="small" color="warning" />
         </IconButton>
-      </div>
+      </Link>
     ),
+    // Cell: ({ row }) => (
+    //   <div>
+    //     {`${row.original.made} ks   `}
+    //     <IconButton
+    //       onClick={() => OpenP(row.original)}
+    //       // onClick={() => <OpenP />}
+    //     >
+    //       <EditIcon
+    //         //onClick={() => Open(row.original)}
+    //         fontSize="small"
+    //         color="warning"
+    //       />
+    //     </IconButton>
+    //   </div>
+    // ),
   },
   {
     Header: "Skladem ",

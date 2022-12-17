@@ -17,7 +17,8 @@ export default function DeleteColumns(props) {
     const dispatch = useDispatch();
     const confirm = useConfirm();
 
-  const itemDelete = (id, type, e) => {
+  const itemDelete = (id, e) => {
+    //console.log("id", id);
     e.preventDefault();
     confirm({
       //title: `Opravdu chtete vymazat položku ${type.name}?`,
@@ -27,7 +28,8 @@ export default function DeleteColumns(props) {
       confirmationButtonProps: { variant: "outlined" },
     })
     .then(() => {
-
+    id.map((row) => { // prochází a postupně vymazává vybrané položky
+      const id = row.original.id;
     if (props.typeTable === "item")
     {Axios.delete(`/api/item_delete/${id}`)
     .then(() => {
@@ -72,34 +74,31 @@ export default function DeleteColumns(props) {
   } else {
     console.log("nepodporovaný typ tabulky");
   }
-}).catch(() => console.log("Deletion cancelled."));
+  })}).catch(() => console.log("Deletion cancelled."));
   }
 
         const navigate = useNavigate();
 
   return (
-
-      <Button
-        type="delete"
-        id={props.typeTable}
-        //size="small"
-        //variant="contained"
-        //color="error"
-        sx={{mt:1}}
-        startIcon={<DeleteOutlinedIcon />}
-        disabled={props.disabledRow}
-        onClick={(e) =>
-          props.selectedRows.map(
-            (row) =>
-              //console.log(row.original.id),
-              itemDelete(row.original.id, props.typeTable, e)
-            //postDelete(row.original.id, e)
-            //navigate("/")
-          )
-        }
-      >
-        Vymazat
-      </Button>
-
+    <Button
+      type="delete"
+      id={props.typeTable}
+      //size="small"
+      //variant="contained"
+      //color="error"
+      sx={{ mt: 1 }}
+      startIcon={<DeleteOutlinedIcon />}
+      disabled={props.disabledRow}
+      onClick={(e) => itemDelete(props.selectedRows, e)}
+      // onClick={(e) =>
+      //   props.selectedRows.map(
+      //     (row) => itemDelete(row.original.id, props.typeTable, e)
+      //     //postDelete(row.original.id, e)
+      //     //navigate("/")
+      //   )
+      // }
+    >
+      Vymazat
+    </Button>
   );
 }

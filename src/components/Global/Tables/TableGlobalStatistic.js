@@ -1,5 +1,11 @@
 import React, { useMemo } from "react";
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination, useSortBy } from "react-table";
+
+import {
+  BsFillArrowUpSquareFill,
+  BsFillArrowDownSquareFill,
+  BsSortDown,
+} from "react-icons/bs";
 
 import {
   Stack,
@@ -43,7 +49,9 @@ export const TableGlobalStatistic = (props) => {
     {
       columns,
       data,
+      initialState: { pageSize: 8 },
     },
+    useSortBy, //umožní řazení dat dle hodnoty
     usePagination //umožní stránkování tabulky
   );
 
@@ -56,7 +64,8 @@ export const TableGlobalStatistic = (props) => {
         padding: 6,
       },
       [`&.${tableCellClasses.body}`]: {
-        fontSize: 13,
+        fontSize: 12, //velikost písma
+        height: 15, //výška řádků tabulky
       },
     }));
 
@@ -85,9 +94,24 @@ export const TableGlobalStatistic = (props) => {
                     sx={{
                       backgroundColor: "primary.main",
                     }}
-                    {...column.getHeaderProps()}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
                   >
-                    {column.render("Header")}
+                    {column.render("Header")} {/* název sloupce */}
+                    <>
+                      {column.Header !== "" && (
+                        <>
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <BsFillArrowDownSquareFill />
+                            ) : (
+                              <BsFillArrowUpSquareFill />
+                            )
+                          ) : (
+                            <BsSortDown />
+                          )}
+                        </>
+                      )}
+                    </>
                   </TableCell>
                 ))}
               </TableRow>
@@ -161,7 +185,7 @@ export const TableGlobalStatistic = (props) => {
             size="small"
             onChange={(e) => setPageSize(Number(e.target.value))}
           >
-            {[5, 10, 20, 30, 50, 100].map((pageSize) => (
+            {[5, 8, 10, 20, 50, 100].map((pageSize) => (
               <MenuItem key={pageSize} value={pageSize}>
                 Položek {pageSize}
               </MenuItem>

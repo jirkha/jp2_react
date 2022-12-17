@@ -4,7 +4,6 @@ import {
   Area,
   AreaChart,
     CartesianGrid,
-    Label,
     Legend,
     Tooltip,
     XAxis,
@@ -12,7 +11,7 @@ import {
 } from "recharts";
 import { Box } from "@mui/material";
 
-function DayStatistic(props) {
+function MonthStatistic(props) {
     // let [data, setData] = useState([]);
 
     // useEffect(() => {
@@ -30,6 +29,12 @@ function DayStatistic(props) {
 return (
   <Box>
     <AreaChart width={700} height={500} data={props.data}>
+      {/* <Line type="monotone" dataKey="sales" stroke="#2196F3" strokeWidth={3} /> */}
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="month" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
       <Area
         type="monotone"
         dataKey="tržby"
@@ -37,14 +42,9 @@ return (
         fill="#2196F3"
         strokeWidth={3}
       />
-      <CartesianGrid stroke="#ccc" />
-      <XAxis dataKey="day"></XAxis>
-      <YAxis />
-      <Tooltip />
-      <Legend />
     </AreaChart>
   </Box>
 );
 }
 
-export default DayStatistic
+export default MonthStatistic;
