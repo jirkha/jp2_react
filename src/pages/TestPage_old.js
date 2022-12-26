@@ -1,27 +1,111 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  geocodeByPlaceId, 
+  getLatLng,
+} from "react-places-autocomplete";
 import { getMaterial } from "../components/Store/Features/Material/materialSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {default as A} from "../components/Product/AddProductMultistepForm";
+import InvoicePDF from "../components/Global/PDF/InvoicePDF";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 export default function Tags() {
-
   const dispatch = useDispatch();
-
+  let [sale, setSale] = useState(null);
   const material = useSelector((state) => state.material.data);
 
   useEffect(() => {
     dispatch(getMaterial());
+    getThisSale();
     console.log("material: ", material);
   }, [dispatch]);
 
+  const getThisSale = async () => {
+    // Axios.get(`https://cors-anywhere.herokuapp.com/http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_rzp.cgi?ico=27074358&xml=0&ver=1.0.4`).then((res) => {
+    //   setSale(res);
+    //   //console.log("items", product);
+    //   console.log("Data načtena", res.data.s_ser);
+    // });
+    fetch("http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_std.cgi?ico=27074358", {
+      mode: "no-cors",
+      method: "GET",
+      headers: new Headers({
+        Accept: "application/xml",
+        "content-type": "application/x-www-form-urlencoded",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT",
+        "Access-Control-Allow-Headers": "Content-Type",
+      }),
+    }).then((response) => {
+      console.log(response);
+      response.text().then((text) => {
+        console.log(text);
+      });
+    });
+  };
+  const [adress, setAdress] = useState(null);
+  // const handleSelect = async value => {
+  //   //const result = await geocodeByAddress(value);
+  //   //setAdress(result)
+  //   console.log("handleSelect", {value});
+  //   setAdress(value)};
+
+  const handleSelect = async (address, placeId) => {
+    console.log("address", address);
+    console.log("placeId", placeId);
+    setAdress(address);
+    const results = await geocodeByAddress(address);
+    const latLng = await getLatLng(results[0]);
+    const [place] = await geocodeByPlaceId(placeId);
+    console.log("place", place);
+    const { long_name: postalCode = "" } =
+      place.address_components.find((c) => c.types.includes("postal_code")) ||
+      {};
+    console.log("postalCode", postalCode);
+  };
+  const handleChange = (value) => {
+    console.log("handleChange", value);
+    setAdress(value);
+  };
+
   return (
     <>
-      <Stack spacing={3} sx={{ width: 500 }}>
+      <div>{sale}</div>
+      <Stack spacing={3} sx={{ width: 500, mt: 3 }}>
+        <div>
+          <GooglePlacesAutocomplete
+            //apiKey="AIzaSyBdBsPmT23JLod6Wm87Ks4i8l-O2jyWtyI"
+            selectProps={{
+              adress,
+              onChange: handleChange,
+              onSelect: handleSelect,
+            }}
+          />
+          {/* {adress && <p>{adress}</p>} */}
+        </div>
+
+        
+        <Autocomplete
+          multiple
+          options={material}
+          getOptionLabel={(option) => option.name}
+          //defaultValue={[material[0]]}
+          renderInput={(params, index) => (
+            <TextField
+              {...params}
+              key={index}
+              variant="standard"
+              label={index}
+              placeholder="Favorites"
+            />
+          )}
+        />
         <Autocomplete
           multiple
           options={material}
@@ -88,6 +172,20 @@ export default function Tags() {
         />
       </Stack>
       <A />
+
+      {/* <InvoicePDF /> */}
+      <div className="App">
+        <PDFDownloadLink document={<InvoicePDF />} filename="FORM">
+          {({ loading }) =>
+            loading ? (
+              <button>Loading Document...</button>
+            ) : (
+              <button>Download</button>
+            )
+          }
+        </PDFDownloadLink>
+        {/* <PDFFile /> */}
+      </div>
     </>
   );
 }

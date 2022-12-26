@@ -13,7 +13,7 @@ import { Container, Typography, IconButton, Link } from "@mui/material";
 import { ConfirmProvider } from "material-ui-confirm"; //umožňuje přidat potvrzovací okna
 import logo from "C:/Users/vecko/jp_2.0/jp2_react/src/assets/J-P web special_black.png";
 
-// import "./App.css";
+import "./";
 //import "./style.css";
 // import Header from "./components/Header";
 import ListMaterialPage from "./pages/ListMaterialPage";
