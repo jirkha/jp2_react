@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Stack, Divider, Grid, Typography } from "@mui/material";
-import { CheckboxTable } from "C://Users/vecko/jp_2.0/jp2_react/src/components/Global/Checkbox";
+import { CheckboxTable } from "../components/Global/Checkbox";
 
 export  const TestPage = () => {
   return (

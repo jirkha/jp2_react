@@ -1,6 +1,6 @@
 import React from "react";
 import { Page, Text, Image, Document, StyleSheet } from "@react-pdf/renderer";
-import logo from "../../../assets/J-P web special_black.png";;
+import logo from "../../../assets/JP_logo_black.png";
 
 const styles = StyleSheet.create({
   body: {

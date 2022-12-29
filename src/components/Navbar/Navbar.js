@@ -108,7 +108,7 @@ import { Divider } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { List } from "@mui/material";
 import { ListItem } from "@mui/material";
-import logo from "C:/Users/vecko/jp_2.0/jp2_react/src/assets/J-P web special_black.png";
+import logo from "../../assets/JP_logo_black.png";
 import { Grid } from "@mui/material";
 import { Tabs } from "@mui/material";
 import { Tab } from "@mui/material";

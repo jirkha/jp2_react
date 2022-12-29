@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  BrowserRouter as Router,
+  //HashRouter as Router,
   Routes,
   Route,
   //useParams
@@ -11,7 +11,7 @@ import LogoutButton from "./components/Global/Login/LogoutButton";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Container, Typography, IconButton, Link } from "@mui/material";
 import { ConfirmProvider } from "material-ui-confirm"; //umožňuje přidat potvrzovací okna
-import logo from "C:/Users/vecko/jp_2.0/jp2_react/src/assets/J-P web special_black.png";
+import logo from "../src/assets/JP_logo_black.png"
 
 import "./";
 //import "./style.css";

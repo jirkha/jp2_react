@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap'
 import { Stack, Typography, Box } from "@mui/material";
-import logo from '../assets/J-P web special_black.png';
+import logo from '../assets/JP_logo_black.png';
 
 const Footer = () => {
 
