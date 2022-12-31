@@ -115,7 +115,7 @@ const re = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-
       .then(res => {
           console.log("Adding Item: ", res);
           dispatch(getMaterial()); //aktualizuje seznam materiálu
-          //dispatch(getMaterialType());
+          dispatch(getMaterialType());
           setNotify({
                     isOpen: true,
                     message: 'Nový materiál byl úspěšně vložen',
